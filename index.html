@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alteração do Fluxo das Gestantes - WhatsApp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideIn 0.8s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide:nth-child(2) { animation-delay: 0.2s; }
+        .slide:nth-child(3) { animation-delay: 0.4s; }
+        .slide:nth-child(4) { animation-delay: 0.6s; }
+        .slide:nth-child(5) { animation-delay: 0.8s; }
+
+        .title-slide {
+            text-align: center;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+        }
+
+        .title-slide h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .slide h2 {
+            font-size: 2.5em;
+            color: #4a4a4a;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .slide h3 {
+            font-size: 1.8em;
+            color: #667eea;
+            margin: 25px 0 15px 0;
+        }
+
+        .slide p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 10px 20px rgba(116, 185, 255, 0.3);
+        }
+
+        .menu-flow {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .menu-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item:hover {
+            transform: translateX(10px);
+        }
+
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .symptom-item {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+            padding: 15px;
+            border-radius: 10px;
+            color: #333;
+            font-weight: 500;
+            transition: transform 0.3s ease;
+        }
+
+        .symptom-item:hover {
+            transform: scale(1.05);
+        }
+
+        .future-plans {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+
+        .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 3px;
+            width: 0%;
+            animation: progressFill 4s ease-out forwards;
+        }
+
+        @keyframes progressFill {
+            to { width: 100%; }
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-top: 4px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .whatsapp-icon {
+            font-size: 2em;
+            color: #25D366;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 25px;
+                margin-bottom: 20px;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.5em;
+            }
+            
+            .slide h2 {
+                font-size: 2em;
+            }
+            
+            .symptoms-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Título -->
+        <div class="slide title-slide">
+            <div class="whatsapp-icon">📱</div>
+            <h1>Alteração do Fluxo das Gestantes</h1>
+            <p class="subtitle">Aprimoramento do Atendimento via WhatsApp<br>Sistema PRONTO</p>
+        </div>
+
+        <!-- Slide 2: Objetivo -->
+        <div class="slide">
+            <h2>🎯 Objetivo da Mudança</h2>
+            <div class="highlight-box">
+                <h3>Proporcionar maior acesso à informação durante toda a jornada da gestação</h3>
+                <p>Incluindo informações sobre gravidez, parto e pós-parto que atualmente não estão disponíveis no WhatsApp.</p>
+            </div>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="icon">🤱</div>
+                    <h4>Acompanhamento Completo</h4>
+                    <p>Da gestação ao pós-parto</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">📋</div>
+                    <h4>Orientações Detalhadas</h4>
+                    <p>Baseadas em sintomas ou procedimentos específicos</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">🏥</div>
+                    <h4>Direcionamento Inteligente</h4>
+                    <p>Para unidades mais próximas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Alteração Principal -->
+        <div class="slide">
+            <h2>🔄 Nova Estrutura do Menu</h2>
+            <div class="menu-flow">
+                <h3>ANTES:</h3>
+                <div class="menu-item">
+                    ➤ "Estou gestante"
+                </div>
+                
+                <h3>DEPOIS:</h3>
+                <div class="menu-item">
+                    ➤ "Estou Gestante – Gravidez, Parto, Pós-Parto e Cuidados com Recém-Nascido(RN)"
+                </div>
+            </div>
+            
+            <p>Esta mudança no título do menu principal já indica para a gestante que encontrará informações completas sobre toda sua jornada maternal.</p>
+        </div>
+
+        <!-- Slide 4: Novo Menu de Opções -->
+        <div class="slide">
+            <h2>📋 Novas Opções do Menu</h2>
+            
+            <div class="menu-item">
+                <h3>1. Agendamentos de Exames e Consultas</h3>
+                <p>Funcionalidade já existente, mantida no novo fluxo</p>
+            </div>
+
+            <div class="menu-item">
+                <h3>2. Estou com sintomas ou preciso de orientações</h3>
+                <p>Novo sistema de triagem baseado em sintomas específicos</p>
+            </div>
+
+            <div class="menu-item">
+                <h3>3. Onde posso fazer meu pré-natal</h3>
+                <p>Será direcionada de acordo com o comprovante de residencia e o mapa de vinculação</p>
+            </div>
+
+            <div class="menu-item">
+                <h3>4. Em qual maternidade vou ter meu bebê</h3>
+                <p>Enviada uma imagem com base nos bairros e as respectivas maternidades onde será realizado o parto</p>
+            </div>
+
+            <div class="menu-item">
+                <h3>5. Plano de parto e plano puerperal</h3>
+                <p>Disponibilização de PDF e instruções detalhadas</p>
+            </div>
+
+            <div class="menu-item">
+                <h3>6. Caderneta das Gestantes</h3>
+                <p>Disponibilização de PDF e instruções sobre a utilização da caderneta</p>
+            </div>
+
+            <div class="menu-item">
+                <h3>7. Preparo para realização de exames</h3>
+                <p>Informações detalhadas sobre os exames que podem ser realizados pelas gestantes e seus devidos preparos</p>
+            </div>
+
+            <div class="menu-item">
+                <h3>8. Informações Sobre Alimentação na gestação e pós-parto</h3>
+                <p>Disponibilização de PDF contendo informações sobre o topico</p>
+            </div>
+
+            <div class="menu-item">
+                <h3>9. Já tive meu bebê. O que preciso saber?</h3>
+                <p>Haverá um sub menu, onde terá as informações do cuidado da mãe e do filho</p>
+            </div>
+        </div>
+        
+        <!-- Slide 5: Caderneta das Gestantes -->
+        <div class="slide">
+            <h2>📖 Caderneta das Gestantes</h2>
+            
+            <div class="highlight-box">
+                <h3>Documento Digital Completo</h3>
+                <p>Arquivo da caderneta oficial com texto explicativo sobre uso adequado e importância do acompanhamento</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="icon">📋</div>
+                    <h4>Registro Completo</h4>
+                    <p>Histórico médico, exames e evolução da gestação</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">👩‍⚕️</div>
+                    <h4>Comunicação Médica</h4>
+                    <p>Facilita troca de informações entre profissionais</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">📱</div>
+                    <h4>Acesso Digital</h4>
+                    <p>Disponível no celular a qualquer momento</p>
+                </div>
+            </div>
+
+            <div class="menu-flow">
+                <h3>Como Usar a Caderneta:</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 10px 0; border-bottom: 1px solid #e9ecef;">
+                        <strong>📝 Leve sempre às consultas:</strong> Essencial para continuidade do cuidado
+                    </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #e9ecef;">
+                        <strong>📊 Registre dados importantes:</strong> Peso, pressão arterial, exames realizados
+                    </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #e9ecef;">
+                        <strong>💉 Controle vacinação:</strong> Acompanhe imunizações obrigatórias
+                    </li>
+                    <li style="padding: 10px 0;">
+                        <strong>🏥 Apresente na maternidade:</strong> Fundamental para atendimento adequado no parto
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 6: Sistema de Sintomas -->
+        <div class="slide">
+            <h2>🩺 Sistema de Triagem de Sintomas</h2>
+            <p>Quando a gestante selecionar "Estou com sintomas ou preciso de orientações", será apresentada uma lista completa de opções:</p>
+            
+            <div class="symptoms-grid">
+                <div class="symptom-item">1. Náuseas e vômitos</div>
+                <div class="symptom-item">2. Tontura ou queda de pressão</div>
+                <div class="symptom-item">3. Cólicas ou contrações</div>
+                <div class="symptom-item">4. Queixas urinárias</div>
+                <div class="symptom-item">5. Dificuldade na amamentação</div>
+                <div class="symptom-item">6. Corrimento vaginal</div>
+                <div class="symptom-item">7. Perda de líquido/sangue</div>
+                <div class="symptom-item">8. Falta de ar</div>
+                <div class="symptom-item">9. Pressão alta</div>
+                <div class="symptom-item">10. Convulsão</div>
+                <div class="symptom-item">11. Dor de cabeça</div>
+                <div class="symptom-item">12. Redução movimentos do bebê</div>
+                <div class="symptom-item">13. Desmaio</div>
+                <div class="symptom-item">14. Relato de Agressão</div>
+            </div>
+            
+            <div class="highlight-box">
+                <p>Cada seleção direcionará para recomendações específicas baseadas no sintoma relatado pela paciente, podendo direcioná-la ao atendimento Humano Prioritário.</p>
+            </div>
+        </div>
+
+        
+
+        <!-- Slide 7: Informações sobre Alimentação -->
+        <div class="slide">
+            <h2>🍎 Informações sobre Alimentação na Gestação e Pós-Parto</h2>
+            
+            <div class="highlight-box">
+                <h3>Orientações Nutricionais Completas</h3>
+                <p>Material desenvolvido em parceria com o Saúde da Mulher, inspirado na cartilha de Recife</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="icon">🥗</div>
+                    <h4>Alimentação na Gestação</h4>
+                    <p>Orientações sobre nutrientes essenciais, alimentos recomendados e restrições alimentares</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">🤱</div>
+                    <h4>Nutrição no Pós-Parto</h4>
+                    <p>Dieta para recuperação e amamentação saudável</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">💊</div>
+                    <h4>Suplementação</h4>
+                    <p>Informações sobre ácido fólico, ferro e outras vitaminas essenciais</p>
+                </div>
+            </div>
+
+            <div class="menu-flow">
+                <h3>Conteúdo Abordado:</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 8px 0;">• Alimentos ricos em ferro, cálcio e ácido fólico</li>
+                    <li style="padding: 8px 0;">• Hidratação adequada durante a gestação</li>
+                    <li style="padding: 8px 0;">• Alimentos a evitar na gravidez</li>
+                    <li style="padding: 8px 0;">• Cardápios sugeridos por trimestre</li>
+                    <li style="padding: 8px 0;">• Alimentação durante a amamentação</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: Preparo para Exames -->
+        <div class="slide">
+            <h2>🔬 Preparo para Realização de Exames</h2>
+            
+            <p>Informações detalhadas sobre os exames que podem ser realizados pelas gestantes e seus devidos preparos, garantindo maior eficiência e conforto durante os procedimentos.</p>
+
+            <div class="symptoms-grid">
+                <div class="symptom-item">
+                    <strong>Citologia Oncótica</strong><br>
+                    Orientações sobre preparo e período ideal
+                </div>
+                <div class="symptom-item">
+                    <strong>Exames de Sangue</strong><br>
+                    Jejum necessário e horários recomendados
+                </div>
+                <div class="symptom-item">
+                    <strong>Ultrassonografias</strong><br>
+                    Preparo específico por tipo de exame
+                </div>
+                <div class="symptom-item">
+                    <strong>Exame de Urina</strong><br>
+                    Coleta adequada e armazenamento
+                </div>
+                <div class="symptom-item">
+                    <strong>Teste de Tolerância à Glicose</strong><br>
+                    Preparo e orientações alimentares
+                </div>
+                <div class="symptom-item">
+                    <strong>Cultura de Streptococcus</strong><br>
+                    Procedimento e momento ideal
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>Exemplo - Preparo para Citologia:</strong><br>
+                Evitar relações sexuais 48h antes, não usar duchas vaginais, medicamentos ou cremes vaginais 3 dias antes do exame. Não realizar durante período menstrual.</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Pós-Parto -->
+        <div class="slide">
+            <h2>👶 Já tive meu bebê. O que preciso saber?</h2>
+            
+            <div class="highlight-box">
+                <h3>Informativo Completo para o Pós-Parto</h3>
+                <p>Material inspirado no modelo de Recife, oferecendo suporte essencial para mãe e bebê</p>
+            </div>
+
+            <div class="menu-flow">
+                <h3>🤱 Cuidados com a Mãe:</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 8px 0;">• Orientações importantes sobre amamentação</li>
+                    <li style="padding: 8px 0;">• Recuperação pós-parto e cicatrização</li>
+                    <li style="padding: 8px 0;">• Cuidados com episiotomia ou cesárea</li>
+                    <li style="padding: 8px 0;">• Sinais de alerta no puerpério</li>
+                    <li style="padding: 8px 0;">• Retorno da menstruação e fertilidade</li>
+                    <li style="padding: 8px 0;">• Planejamento familiar e contracepção</li>
+                </ul>
+            </div>
+
+            <div class="menu-flow">
+                <h3>👶 Cuidados com o Bebê:</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 8px 0;">• Amamentação: técnicas e resolução de problemas</li>
+                    <li style="padding: 8px 0;">• Cuidados com o cordão umbilical</li>
+                    <li style="padding: 8px 0;">• Higiene e cuidados diários</li>
+                    <li style="padding: 8px 0;">• Vacinação e consultas de puericultura</li>
+                    <li style="padding: 8px 0;">• Sinais de alerta no recém-nascido</li>
+                    <li style="padding: 8px 0;">• Introdução alimentar e Alimentação do bebê</li>
+                </ul>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="icon">🆘</div>
+                    <h4>Sinais de Emergência</h4>
+                    <p>Quando procurar ajuda médica imediata</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">📅</div>
+                    <h4>Calendário de Consultas</h4>
+                    <p>Cronograma de acompanhamento médico</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Planos Futuros -->
+        <div class="slide">
+            <h2>🚀 Planos Futuros</h2>
+            
+            <div class="future-plans">
+                <h3>🔮 Próximas Implementações</h3>
+                <div style="text-align: center; padding: 20px;">
+                    <div class="benefit-card" style="display: inline-block; max-width: 400px;">
+                        <div class="icon">📅</div>
+                        <h4>Pré-agendamento da Maternidade</h4>
+                        <p>Sistema automatizado para agendamento antecipado, permitindo que as gestantes garantam sua vaga na maternidade de referência com antecedência, reduzindo ansiedade e organizando melhor o fluxo hospitalar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Benefícios -->
+        <div class="slide">
+            <h2>✨ Benefícios da Nova Estrutura</h2>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="icon">🎯</div>
+                    <h4>Atendimento Direcionado</h4>
+                    <p>Triagem mais eficiente baseada em sintomas específicos</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">📍</div>
+                    <h4>Localização Inteligente</h4>
+                    <p>Direcionamento para unidades mais próximas da residência</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">📚</div>
+                    <h4>Informação Completa</h4>
+                    <p>Cobertura total da jornada maternal</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">⏰</div>
+                    <h4>Disponibilidade 24/7</h4>
+                    <p>Acesso a orientações a qualquer momento</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">🤝</div>
+                    <h4>Suporte Contínuo</h4>
+                    <p>Da gestação ao pós-parto</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">📱</div>
+                    <h4>Interface Amigável</h4>
+                    <p>Navegação intuitiva e acessível</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Conclusão -->
+        <div class="slide">
+            <h2>🎉 Conclusão</h2>
+            <div class="highlight-box">
+                <h3>Transformação Digital no Cuidado Materno</h3>
+                <p>Esta alteração representa um marco significativo no atendimento às gestantes via WhatsApp, proporcionando:</p>
+                <ul style="margin-top: 20px; padding-left: 20px;">
+                    <li>Maior acessibilidade à informação, promovendo educação em saúde</li>
+                    <li>Atendimento mais humanizado e personalizado, promovendo acolhimento e equidade</li>
+                    <li>Redução na ansiedade das gestantes, promovendo suporte emociona</li>
+                    <li>Otimização do tempo da equipe de equipe de saúde, promovendo agilidade</li>
+                    <li>Melhoria na qualidade do pré-natal e pós-parto, promovendo integralidade na assistência</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px; font-size: 1.2em; color: #667eea;">
+                <strong>Juntos, criamos um presente para hoje e um futuro ainda melhor para mães e bebês! 👶💙</strong>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Adiciona interatividade suave aos cards
+        document.querySelectorAll('.benefit-card, .menu-item, .symptom-item').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = this.classList.contains('benefit-card') ? 'translateY(-5px)' : 
+                                     this.classList.contains('menu-item') ? 'translateX(10px)' : 'scale(1.05)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'none';
+            });
+        });
+
+        // Efeito de scroll suave
+        window.addEventListener('scroll', () => {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => {
+                const slideTop = slide.offsetTop;
+                const slideHeight = slide.clientHeight;
+                const windowHeight = window.innerHeight;
+                const scrollTop = window.scrollY;
+
+                if (scrollTop > slideTop - windowHeight + slideHeight / 3) {
+                    slide.style.opacity = '1';
+                    slide.style.transform = 'translateY(0)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
