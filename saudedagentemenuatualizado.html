@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Saúde da Gente - Fluxograma Interativo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            min-height: 600px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e3f2fd;
+        }
+
+        .header h1 {
+            color: #1976d2;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-title {
+            font-size: 1.3em;
+            color: #1976d2;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .menu-options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .menu-button {
+            background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            box-shadow: 0 4px 15px rgba(25,118,210,0.3);
+        }
+
+        .menu-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(25,118,210,0.4);
+        }
+
+        .back-button {
+            background: #757575;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #616161;
+        }
+
+        .info-text {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid #1976d2;
+            line-height: 1.6;
+        }
+
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+
+        .navigation {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .home-button {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(76,175,80,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .home-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76,175,80,0.4);
+        }
+
+        .breadcrumb {
+            background: #f5f5f5;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .highlight {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Saúde da Gente</h1>
+            <p>Fluxograma Interativo do Chatbot</p>
+        </div>
+
+        <!-- Menu Principal -->
+        <div id="main-menu" class="screen active">
+            <div class="menu-title">Menu Principal</div>
+            <div class="menu-options">
+                <button class="menu-button" onclick="showScreen('pronto-atendimento')">
+                    🚑 1. Atendimento do Pronto
+                </button>
+                <button class="menu-button" onclick="showScreen('teleterapia')">
+                    💻 2. Teleterapia
+                </button>
+                <button class="menu-button" onclick="showScreen('saude-gente-menu')">
+                    🏥 3. Saúde da Gente - Nova Opção
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Saúde da Gente -->
+        <div id="saude-gente-menu" class="screen">
+            <button class="back-button" onclick="showScreen('main-menu')">← Voltar</button>
+            <div class="breadcrumb">Menu Principal > Saúde da Gente</div>
+            <div class="info-text">
+                <strong>Olá! Bem-vindo ao menu digital do Saúde da Gente, o maior programa de Saúde itinerante do Brasil!</strong> Escolha uma das opções abaixo:
+            </div>
+            <div class="menu-options">
+                <button class="menu-button" onclick="showScreen('localizacao')">
+                    📍 1. Localização e Horário da Tenda
+                </button>
+                <button class="menu-button" onclick="showScreen('consultas-menu')">
+                    🩺 2. Consultas Médicas
+                </button>
+                <button class="menu-button" onclick="showScreen('exames-menu')">
+                    🔬 3. Exames e Laboratório
+                </button>
+                <button class="menu-button" onclick="showScreen('cirurgias-menu')">
+                    ⚕️ 4. Cirurgias
+                </button>
+                <button class="menu-button" onclick="showScreen('cadastro-menu')">
+                    📋 5. Cadastro Único e Documentos
+                </button>
+                <button class="menu-button" onclick="showScreen('outros-servicos-menu')">
+                    💊 6. Outros Serviços
+                </button>
+            </div>
+        </div>
+
+        <!-- Localização -->
+        <div id="localizacao" class="screen">
+            <button class="back-button" onclick="showScreen('saude-gente-menu')">← Voltar</button>
+            <div class="breadcrumb">Menu Principal > Saúde da Gente > Localização</div>
+            <div class="info-text">
+                <div class="highlight">
+                    📍 <strong>Localização e Horário da Tenda</strong><br><br>
+                    <em>Verificar a possibilidade de enviar a localização (Questão para o pessoal da Tactium)</em><br><br>
+                    Se não for possível, inserir mensagem com informações de localização.
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Consultas -->
+        <div id="consultas-menu" class="screen">
+            <button class="back-button" onclick="showScreen('saude-gente-menu')">← Voltar</button>
+            <div class="breadcrumb">Menu Principal > Saúde da Gente > Consultas</div>
+            <div class="menu-title">Escolha a especialidade:</div>
+            <div class="menu-options">
+                <button class="menu-button" onclick="showConsulta('clinico-geral')">2.1 Clínico Geral</button>
+                <button class="menu-button" onclick="showConsulta('pediatria')">2.2 Pediatria</button>
+                <button class="menu-button" onclick="showConsulta('ginecologia')">2.3 Ginecologia</button>
+                <button class="menu-button" onclick="showConsulta('dermatologia')">2.4 Dermatologia</button>
+                <button class="menu-button" onclick="showScreen('oftalmologia-menu')">2.5 Oftalmologia</button>
+                <button class="menu-button" onclick="showConsulta('cirurgiao')">2.6 Cirurgião Geral</button>
+                <button class="menu-button" onclick="showConsulta('ortopedista')">2.7 Ortopedista</button>
+                <button class="menu-button" onclick="showConsulta('neuropediatria')">2.8 NeuroPediatria</button>
+                <button class="menu-button" onclick="showConsulta('otorrino')">2.9 Otorrinolaringologista</button>
+            </div>
+        </div>
+
+        <!-- Oftalmologia Menu -->
+        <div id="oftalmologia-menu" class="screen">
+            <button class="back-button" onclick="showScreen('consultas-menu')">← Voltar</button>
+            <div class="breadcrumb">Menu Principal > Saúde da Gente > Consultas > Oftalmologia</div>
+            <div class="menu-options">
+                <button class="menu-button" onclick="showConsulta('oftalmologia-geral')">👁️ Informações Gerais</button>
+                <button class="menu-button" onclick="showScreen('catarata')">🔍 Cirurgia de Catarata</button>
+            </div>
+        </div>
+
+        <!-- Menu Exames -->
+        <div id="exames-menu" class="screen">
+            <button class="back-button" onclick="showScreen('saude-gente-menu')">← Voltar</button>
+            <div class="breadcrumb">Menu Principal > Saúde da Gente > Exames</div>
+            <div class="menu-title">Escolha uma opção:</div>
+            <div class="menu-options">
+                <button class="menu-button" onclick="showExame('coleta')">🩸 3.1 Coleta de exames</button>
+                <button class="menu-button" onclick="showExame('resultados')">📄 3.2 Entrega de resultados</button>
+                <button class="menu-button" onclick="showExame('ultrassom')">🖼️ 3.3 Ultrassom</button>
+                <button class="menu-button" onclick="showExame('citologia')">🌸 3.4 Citologia</button>
+            </div>
+        </div>
+
+        <!-- Menu Cirurgias -->
+        <div id="cirurgias-menu" class="screen">
+            <button class="back-button" onclick="showScreen('saude-gente-menu')">← Voltar</button>
+            <div class="breadcrumb">Menu Principal > Saúde da Gente > Cirurgias</div>
+            <div class="menu-title">Escolha sua situação:</div>
+            <div class="menu-options">
+                <button class="menu-button" onclick="showScreen('vasectomia-menu')">👨 4.1 Vasectomia</button>
+                <button class="menu-button" onclick="showScreen('laqueadura-menu')">👩 4.2 Laqueadura</button>
+                <button class="menu-button" onclick="showScreen('outras-cirurgias')">⚕️ 4.3 Outras cirurgias</button>
+            </div>
+        </div>
+
+        <!-- Vasectomia Menu -->
+        <div id="vasectomia-menu" class="screen">
+            <button class="back-button" onclick="showScreen('cirurgias-menu')">← Voltar</button>
+            <div class="breadcrumb">Menu Principal > Saúde da Gente > Cirurgias > Vasectomia</div>
+            <div class="menu-options">
+                <button class="menu-button" onclick="showCirurgia('vasectomia-info')">ℹ️ Informações Gerais</button>
+                <button class="menu-button" onclick="showCirurgia('vasectomia-termo')">⏳ Já assinei o termo e ainda não fui chamado</button>
+            </div>
+        </div>
+
+        <!-- Laqueadura Menu -->
+        <div id="laqueadura-menu" class="screen">
+            <button class="back-button" onclick="showScreen('cirurgias-menu')">← Voltar</button>
+            <div class="breadcrumb">Menu Principal > Saúde da Gente > Cirurgias > Laqueadura</div>
+            <div class="menu-options">
+                <button class="menu-button" onclick="showCirurgia('laqueadura-info')">ℹ️ Informações Gerais</button>
+                <button class="menu-button" onclick="showCirurgia('laqueadura-termo')">⏳ Já assinei o termo e ainda não fui chamado</button>
+            </div>
+        </div>
+
+        <!-- Menu Cadastro -->
+        <div id="cadastro-menu" class="screen">
+            <button class="back-button" onclick="showScreen('saude-gente-menu')">← Voltar</button>
+            <div class="breadcrumb">Menu Principal > Saúde da Gente > Cadastro</div>
+            <div class="menu-title">Escolha uma opção:</div>
+            <div class="menu-options">
+                <button class="menu-button" onclick="showCadastro('cadastro-unico')">📋 5.1 Atendimento Cadastro Único</button>
+                <button class="menu-button" onclick="showCadastro('bolsa-familia')">💰 5.2 Bolsa Família</button>
+            </div>
+        </div>
+
+        <!-- Menu Outros Serviços -->
+        <div id="outros-servicos-menu" class="screen">
+            <button class="back-button" onclick="showScreen('saude-gente-menu')">← Voltar</button>
+            <div class="breadcrumb">Menu Principal > Saúde da Gente > Outros Serviços</div>
+            <div class="menu-title">Escolha uma opção:</div>
+            <div class="menu-options">
+                <button class="menu-button" onclick="showOutros('lista-completa')">📋 6.1 Lista completa de serviços</button>
+                <button class="menu-button" onclick="showOutros('vacinas')">💉 6.2 Vacinas</button>
+            </div>
+        </div>
+
+        <!-- Tela de Conteúdo Genérica -->
+        <div id="content-screen" class="screen">
+            <button class="back-button" onclick="goBack()">← Voltar</button>
+            <div id="content-breadcrumb" class="breadcrumb"></div>
+            <div id="content-area" class="info-text"></div>
+        </div>
+
+        <!-- Navegação -->
+        <div class="navigation">
+            <button class="home-button" onclick="showScreen('main-menu')">🏠 Início</button>
+        </div>
+    </div>
+
+    <script>
+        let currentScreen = 'main-menu';
+        let previousScreen = 'main-menu';
+
+        function showScreen(screenId) {
+            // Esconde todas as telas
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            // Mostra a tela selecionada
+            document.getElementById(screenId).classList.add('active');
+            
+            previousScreen = currentScreen;
+            currentScreen = screenId;
+        }
+
+        function goBack() {
+            showScreen(previousScreen);
+        }
+
+        function showContent(title, content, breadcrumb, backScreen) {
+            document.getElementById('content-breadcrumb').textContent = breadcrumb;
+            document.getElementById('content-area').innerHTML = `<h3>${title}</h3>${content}`;
+            
+            // Atualiza o botão voltar
+            document.querySelector('#content-screen .back-button').onclick = () => showScreen(backScreen);
+            
+            previousScreen = currentScreen;
+            currentScreen = 'content-screen';
+            showScreen('content-screen');
+        }
+
+        function showConsulta(tipo) {
+            let title, content, breadcrumb;
+            
+            switch(tipo) {
+                case 'clinico-geral':
+                    title = '👩‍⚕️ Clínico Geral';
+                    content = `<div class="info-text">
+                        <strong>Atendimento Médico na Tenda!</strong><br><br>
+                        O atendimento com Clínico Geral é realizado diretamente na Tenda do Saúde da Gente, de segunda a sábado, nos turnos da manhã e da tarde.<br><br>
+                        Aproveite para cuidar da sua saúde com praticidade, perto de casa e com toda a atenção que você merece! 💙🩺
+                    </div>`;
+                    break;
+                case 'pediatria':
+                    title = '👶 Pediatria';
+                    content = `<div class="info-text">
+                        <strong>Atendimento Médico na Tenda!</strong><br><br>
+                        O atendimento com Pediatra é realizado diretamente na Tenda do Saúde da Gente, de segunda a sábado, nos turnos da manhã e da tarde.<br><br>
+                        Aproveite para cuidar da sua saúde com praticidade, perto de casa e com toda a atenção que você merece! 💙🩺
+                    </div>`;
+                    break;
+                case 'ginecologia':
+                    title = '👩‍⚕️ Ginecologia';
+                    content = `<div class="info-text">
+                        <strong>Atendimento Médico na Tenda!</strong><br><br>
+                        O atendimento com Ginecologista é realizado diretamente na Tenda do Saúde da Gente, de segunda a sábado, nos turnos da manhã e da tarde.<br><br>
+                        Aproveite para cuidar da sua saúde com praticidade, perto de casa e com toda a atenção que você merece! 💙🩺
+                    </div>`;
+                    break;
+                case 'dermatologia':
+                    title = '🧴 Dermatologia';
+                    content = `<div class="info-text">
+                        <strong>Atendimento Médico na Tenda!</strong><br><br>
+                        O atendimento com Dermatologista é realizado diretamente na Tenda do Saúde da Gente, <strong>quinta-feira</strong>, nos turnos da manhã e da tarde.<br><br>
+                        Aproveite para cuidar da sua saúde com praticidade, perto de casa e com toda a atenção que você merece! 💙🩺
+                    </div>`;
+                    break;
+                case 'oftalmologia-geral':
+                    title = '👁️ Oftalmologia - Informações Gerais';
+                    content = `<div class="info-text">
+                        <strong>Atendimento com Oftalmologista na Tenda!</strong><br><br>
+                        O atendimento com Oftalmologista é realizado diretamente na Tenda do Saúde da Gente nos seguintes dias e horários:<br><br>
+                        📅 <strong>Segunda, quinta e sexta-feira</strong> — a partir das 13h<br>
+                        📅 <strong>Terça, quarta e sábado</strong> — a partir das 8h<br><br>
+                        Cuide da sua saúde visual com conforto, qualidade e pertinho de casa! 💙👓
+                    </div>`;
+                    break;
+                case 'cirurgiao':
+                    title = '⚕️ Cirurgião Geral';
+                    content = `<div class="info-text">
+                        <strong>Atendimento com Cirurgião na Tenda!</strong><br><br>
+                        O atendimento com Cirurgião é realizado <strong>somente com encaminhamento médico</strong>.<br><br>
+                        A marcação deve ser feita diretamente na Tenda do Saúde da Gente.<br><br>
+                        Se você precisa de avaliação ou acompanhamento, estamos aqui para cuidar de você com atenção e qualidade, pertinho de casa! 💙🩺
+                    </div>`;
+                    break;
+                case 'ortopedista':
+                    title = '🦴 Ortopedista';
+                    content = `<div class="info-text">
+                        <strong>Atendimento com Ortopedista na Tenda!</strong><br><br>
+                        O atendimento com Ortopedista é realizado <strong>somente com encaminhamento médico</strong>.<br><br>
+                        A marcação deve ser feita diretamente na Tenda do Saúde da Gente.<br><br>
+                        Se você precisa de avaliação ou acompanhamento ortopédico, estamos aqui para cuidar de você com atenção e qualidade, pertinho de casa! 💙🦴
+                    </div>`;
+                    break;
+                case 'neuropediatria':
+                    title = '🧠 NeuroPediatria';
+                    content = `<div class="info-text">
+                        <strong>Atendimento em Neuropediatria na Tenda!</strong><br><br>
+                        O atendimento com Neuropediatra está disponível <strong>somente com encaminhamento médico</strong>.<br><br>
+                        A marcação deve ser feita diretamente na Tenda do Saúde da Gente.<br><br>
+                        Se seu(a) filho(a) precisa de um cuidado especial, conte com a gente para oferecer um atendimento humanizado e próximo da comunidade! 💙👶
+                    </div>`;
+                    break;
+                case 'otorrino':
+                    title = '👂 Otorrinolaringologia';
+                    content = `<div class="info-text">
+                        <strong>Atendimento em Otorrino na Tenda!</strong><br><br>
+                        O atendimento com Otorrino está disponível <strong>somente com encaminhamento médico</strong>.<br><br>
+                        A marcação deve ser feita diretamente na Tenda do Saúde da Gente.<br><br>
+                        Se você precisa de um cuidado especial, conte com a gente para oferecer um atendimento humanizado e próximo da comunidade! 💙👂
+                    </div>`;
+                    break;
+            }
+            
+            breadcrumb = 'Menu Principal > Saúde da Gente > Consultas > ' + title.replace(/[^\w\s]/gi, '');
+            showContent(title, content, breadcrumb, 'consultas-menu');
+        }
+
+        function showExame(tipo) {
+            let title, content, breadcrumb;
+            
+            switch(tipo) {
+                case 'coleta':
+                    title = '🩸 Coleta de Exames';
+                    content = `<div class="info-text">
+                        A coleta de exames laboratoriais acontece na Tenda do Saúde da Gente às <strong>quintas e sextas-feiras, das 6h às 8h</strong>, por ordem de chegada.<br><br>
+                        Venha com a gente, traga seu pedido médico e venha cuidar da sua saúde com a gente! 💙
+                    </div>`;
+                    break;
+                case 'resultados':
+                    title = '📄 Entrega de Resultados';
+                    content = `<div class="info-text">
+                        Os resultados dos exames podem ser retirados de <strong>segunda a sexta-feira, das 10h às 12h e das 15h às 17h</strong>, diretamente na Tenda.<br><br>
+                        Estamos aqui para garantir que você receba seu resultado com segurança e acolhimento! 💙
+                    </div>`;
+                    break;
+                case 'ultrassom':
+                    title = '🖼️ Ultrassom';
+                    content = `<div class="info-text">
+                        Para realizar seu exame de ultrassom, basta agendar diretamente na Tenda do Saúde da Gente.<br><br>
+                        Conte com a nossa equipe para um atendimento cuidadoso e com qualidade! 💙🖼️
+                    </div>`;
+                    break;
+                case 'citologia':
+                    title = '🌸 Citologia';
+                    content = `<div class="info-text">
+                        O exame de citologia (preventivo do colo do útero) é oferecido de <strong>segunda a sexta-feira, nos turnos da manhã e da tarde</strong>.<br><br>
+                        Cuidar da saúde da mulher é essencial — e estamos aqui para te acompanhar em cada etapa! 🌸👩‍⚕️
+                    </div>`;
+                    break;
+            }
+            
+            breadcrumb = 'Menu Principal > Saúde da Gente > Exames > ' + title.replace(/[^\w\s]/gi, '');
+            showContent(title, content, breadcrumb, 'exames-menu');
+        }
+
+        function showCirurgia(tipo) {
+            let title, content, breadcrumb, backScreen;
+            
+            switch(tipo) {
+                case 'vasectomia-info':
+                    title = '👨 Vasectomia - Informações Gerais';
+                    content = `<div class="info-text">
+                        A consulta para avaliação da vasectomia é realizada na Tenda do Saúde da Gente, de <strong>segunda a sábado, nos turnos da manhã e da tarde</strong>.<br><br>
+                        O procedimento cirúrgico será acompanhado após essa avaliação, garantindo um atendimento seguro e com todo o cuidado que você merece! 💙🩺
+                    </div>`;
+                    backScreen = 'vasectomia-menu';
+                    break;
+                case 'vasectomia-termo':
+                    title = '⏳ Vasectomia - Já assinei o termo';
+                    content = `<div class="info-text">
+                        Vimos que você já passou pelo atendimento e assinou o termo de responsabilidade para a cirurgia de vasectomia.<br><br>
+                        Neste momento, o seu nome permanece na fila de espera e o procedimento será agendado conforme a disponibilidade da rede de saúde e a ordem de encaminhamento.<br><br>
+                        Sabemos que a espera pode gerar ansiedade, mas queremos reforçar que todo o processo está sendo acompanhado com cuidado. Assim que a data da sua cirurgia for definida, entraremos em contato.<br><br>
+                        Estamos à disposição para qualquer dúvida e seguimos aqui para cuidar de você! 💙
+                    </div>`;
+                    backScreen = 'vasectomia-menu';
+                    break;
+                case 'laqueadura-info':
+                    title = '👩 Laqueadura - Informações Gerais';
+                    content = `<div class="info-text">
+                        A consulta para avaliação da laqueadura é realizada na Tenda do Saúde da Gente, de <strong>segunda a sábado, nos turnos da manhã e da tarde</strong>.<br><br>
+                        O procedimento cirúrgico será acompanhado após essa avaliação, garantindo um atendimento seguro e com todo o cuidado que você merece! 💙🩺
+                    </div>`;
+                    backScreen = 'laqueadura-menu';
+                    break;
+                case 'laqueadura-termo':
+                    title = '⏳ Laqueadura - Já assinei o termo';
+                    content = `<div class="info-text">
+                        Vimos que você já passou pelo atendimento com a ginecologista e assinou o termo de responsabilidade para a cirurgia de laqueadura.<br><br>
+                        Neste momento, o seu nome permanece na fila de espera e o procedimento será agendado conforme a disponibilidade da rede de saúde e a ordem de encaminhamento.<br><br>
+                        Sabemos que a espera pode gerar ansiedade, mas queremos reforçar que todo o processo está sendo acompanhado com cuidado. Assim que a data da sua cirurgia for definida, entraremos em contato.<br><br>
+                        Estamos à disposição para qualquer dúvida e seguimos aqui para cuidar de você! 💙
+                    </div>`;
+                    backScreen = 'laqueadura-menu';
+                    break;
+            }
+            
+            breadcrumb = 'Menu Principal > Saúde da Gente > Cirurgias > ' + title.replace(/[^\w\s]/gi, '');
+            showContent(title, content, breadcrumb, backScreen);
+        }
+
+        function showCadastro(tipo) {
+            let title, content, breadcrumb;
+            
+            switch(tipo) {
+                case 'cadastro-unico':
+                    title = '📋 Cadastro Único';
+                    content = `<div class="info-text">
+                        <strong>📍 Atendimento Cadastro Único na Tenda do Saúde da Gente</strong><br><br>
+                        O atendimento acontece de <strong>segunda a sexta-feira, a partir das 8h</strong>, aqui na Tenda do Saúde da Gente.<br><br>
+                        <strong>Para facilitar seu atendimento, não esqueça de trazer os documentos:</strong><br>
+                        • Cartão SUS<br>
+                        • CPF<br>
+                        • Comprovante de residência<br><br>
+                        Estamos prontos para receber você com atenção e cuidado! 💙✨
+                    </div>`;
+                    break;
+                case 'bolsa-familia':
+                    title = '💰 Bolsa Família';
+                    content = `<div class="info-text">
+                        <strong>📍 Atendimento Bolsa Família na Tenda do Saúde da Gente</strong><br><br>
+                        O atendimento acontece de <strong>segunda a sexta-feira, a partir das 8h</strong>, aqui na Tenda do Saúde da Gente.<br><br>
+                        <strong>Para facilitar seu atendimento, não esqueça de trazer os documentos:</strong><br>
+                        • Cartão SUS<br>
+                        • CPF<br>
+                        • Comprovante de residência<br><br>
+                        Estamos prontos para receber você com atenção e cuidado! 💙✨
+                    </div>`;
+                    break;
+            }
+            
+            breadcrumb = 'Menu Principal > Saúde da Gente > Cadastro > ' + title.replace(/[^\w\s]/gi, '');
+            showContent(title, content, breadcrumb, 'cadastro-menu');
+        }
+
+        function showOutros(tipo) {
+            let title, content, breadcrumb;
+            
+            switch(tipo) {
+                case 'lista-completa':
+                    title = '📋 Lista Completa de Serviços';
+                    content = `<div class="info-text">
+                        <strong>📱 Consulte nosso Instagram @saudedagentemaceio para ver todos os serviços</strong><br><br>
+                        Siga-nos nas redes sociais para ficar por dentro de todos os serviços disponíveis e novidades do programa Saúde da Gente! 💙📱
+                    </div>`;
+                    break;
+                case 'vacinas':
+                    title = '💉 Vacinas';
+                    content = `<div class="info-text">
+                        <strong>💉 Atendimento de Vacinas na Tenda do Saúde da Gente</strong><br><br>
+                        Estamos de <strong>segunda a sábado, nos turnos da manhã e da tarde</strong>, prontos para cuidar da sua proteção!<br><br>
+                        Realizamos todas as vacinas do calendário vacinal, garantindo saúde e segurança para você e sua família.<br><br>
+                        Venha se vacinar com a gente! 💙✨
+                    </div>`;
+                    break;
+            }
+            
+            breadcrumb = 'Menu Principal > Saúde da Gente > Outros Serviços > ' + title.replace(/[^\w\s]/gi, '');
+            showContent(title, content, breadcrumb, 'outros-servicos-menu');
+        }
+
+        // Telas especiais
+        document.getElementById('catarata') = createSpecialScreen('catarata', 'Cirurgia de Catarata', `
+            <div class="highlight">
+                <strong>🔍 Cirurgia de Catarata</strong><br><br>
+                <em>Esta opção direciona para atendimento humano.</em><br><br>
+                Para informações sobre cirurgia de catarata, você será direcionado para conversar com um de nossos atendentes especializados.
+            </div>
+        `, 'Menu Principal > Saúde da Gente > Consultas > Oftalmologia > Catarata', 'oftalmologia-menu');
+
+        document.getElementById('outras-cirurgias') = createSpecialScreen('outras-cirurgias', 'Outras Cirurgias', `
+            <div class="highlight">
+                <strong>⚕️ Outras Cirurgias</strong><br><br>
+                <em>Por favor, envie uma foto do encaminhamento médico da cirurgia.</em><br><br>
+                Após enviar a foto, você será direcionado para atendimento humano especializado.
+            </div>
+        `, 'Menu Principal > Saúde da Gente > Cirurgias > Outras Cirurgias', 'cirurgias-menu');
+
+        document.getElementById('pronto-atendimento') = createSpecialScreen('pronto-atendimento', 'Atendimento do Pronto', `
+            <div class="info-text">
+                <strong>🚑 Atendimento do Pronto</strong><br><br>
+                Esta opção já existe no sistema atual do chatbot e direciona para o fluxo de pronto atendimento.
+            </div>
+        `, 'Menu Principal > Atendimento do Pronto', 'main-menu');
+
+        document.getElementById('teleterapia') = createSpecialScreen('teleterapia', 'Teleterapia', `
+            <div class="info-text">
+                <strong>💻 Teleterapia</strong><br><br>
+                Esta opção já existe no sistema atual do chatbot e direciona para o fluxo de teleterapia.
+            </div>
+        `, 'Menu Principal > Teleterapia', 'main-menu');
+
+        function createSpecialScreen(id, title, content, breadcrumb, backScreen) {
+            return `
+                <button class="back-button" onclick="showScreen('${backScreen}')">← Voltar</button>
+                <div class="breadcrumb">${breadcrumb}</div>
+                <h3>${title}</h3>
+                ${content}
+            `;
+        }
+
+        // Adiciona as telas especiais ao DOM
+        function addSpecialScreens() {
+            const container = document.querySelector('.container');
+            
+            // Catarata
+            const catarataDiv = document.createElement('div');
+            catarataDiv.id = 'catarata';
+            catarataDiv.className = 'screen';
+            catarataDiv.innerHTML = `
+                <button class="back-button" onclick="showScreen('oftalmologia-menu')">← Voltar</button>
+                <div class="breadcrumb">Menu Principal > Saúde da Gente > Consultas > Oftalmologia > Catarata</div>
+                <div class="highlight">
+                    <strong>🔍 Cirurgia de Catarata</strong><br><br>
+                    <em>Esta opção direciona para atendimento humano.</em><br><br>
+                    Para informações sobre cirurgia de catarata, você será direcionado para conversar com um de nossos atendentes especializados.
+                </div>
+            `;
+            container.appendChild(catarataDiv);
+
+            // Outras Cirurgias
+            const outrasDiv = document.createElement('div');
+            outrasDiv.id = 'outras-cirurgias';
+            outrasDiv.className = 'screen';
+            outrasDiv.innerHTML = `
+                <button class="back-button" onclick="showScreen('cirurgias-menu')">← Voltar</button>
+                <div class="breadcrumb">Menu Principal > Saúde da Gente > Cirurgias > Outras Cirurgias</div>
+                <div class="highlight">
+                    <strong>⚕️ Outras Cirurgias</strong><br><br>
+                    <em>Por favor, envie uma foto do encaminhamento médico da cirurgia.</em><br><br>
+                    Após enviar a foto, você será direcionado para atendimento humano especializado.
+                </div>
+            `;
+            container.appendChild(outrasDiv);
+
+            // Pronto Atendimento
+            const prontoDiv = document.createElement('div');
+            prontoDiv.id = 'pronto-atendimento';
+            prontoDiv.className = 'screen';
+            prontoDiv.innerHTML = `
+                <button class="back-button" onclick="showScreen('main-menu')">← Voltar</button>
+                <div class="breadcrumb">Menu Principal > Atendimento do Pronto</div>
+                <div class="info-text">
+                    <strong>🚑 Atendimento do Pronto</strong><br><br>
+                    Esta opção já existe no sistema atual do chatbot e direciona para o fluxo de pronto atendimento.
+                </div>
+            `;
+            container.appendChild(prontoDiv);
+
+            // Teleterapia
+            const teleDiv = document.createElement('div');
+            teleDiv.id = 'teleterapia';
+            teleDiv.className = 'screen';
+            teleDiv.innerHTML = `
+                <button class="back-button" onclick="showScreen('main-menu')">← Voltar</button>
+                <div class="breadcrumb">Menu Principal > Teleterapia</div>
+                <div class="info-text">
+                    <strong>💻 Teleterapia</strong><br><br>
+                    Esta opção já existe no sistema atual do chatbot e direciona para o fluxo de teleterapia.
+                </div>
+            `;
+            container.appendChild(teleDiv);
+        }
+
+        // Inicializa as telas especiais quando a página carrega
+        document.addEventListener('DOMContentLoaded', addSpecialScreens);
+    </script>
+</body>
+</html>
