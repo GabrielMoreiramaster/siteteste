@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot - Unidades de Saúde</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .comparison-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .comparison-title {
+            text-align: center;
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .comparison-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #4a90e2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-box.after {
+            border-left-color: #28a745;
+        }
+
+        .comparison-box h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .menu-option {
+            background: #e9ecef;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .menu-option:hover {
+            background: #dee2e6;
+            transform: translateY(-2px);
+        }
+
+        .menu-option.new {
+            background: #d4edda;
+            border-color: #28a745;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .chatbot-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .restart-btn {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .restart-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .chat-container {
+            height: 500px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .message.bot {
+            background: #4a90e2;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 18px 18px 18px 4px;
+            margin-right: auto;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+        }
+
+        .message.user {
+            background: #28a745;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 18px 18px 4px 18px;
+            margin-left: auto;
+            text-align: right;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4a90e2;
+        }
+
+        .send-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .send-btn:hover {
+            background: #357abd;
+        }
+
+        .send-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .quick-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .quick-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .quick-btn:hover {
+            background: #357abd;
+            transform: translateY(-2px);
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Sistema de Chatbot - Unidades de Saúde</h1>
+            <p>Demonstração da melhoria no fluxo de atendimento</p>
+        </div>
+
+        <div class="comparison-section">
+            <h2 class="comparison-title">📊 Comparação: Antes vs Depois</h2>
+            <div class="comparison-container">
+                <div class="comparison-box">
+                    <h3>🔴 ANTES</h3>
+                    <div style="font-weight: bold; margin-bottom: 15px;">Assistente Virtual:</div>
+                    <div style="margin-bottom: 10px;">Selecione o tipo de atendimento que você deseja:</div>
+                    <div class="menu-option">👩‍⚕️ Atendimento do Pronto</div>
+                    <div class="menu-option">🧠 Teleterapia</div>
+                </div>
+                
+                <div class="comparison-box after">
+                    <h3>🟢 DEPOIS</h3>
+                    <div style="font-weight: bold; margin-bottom: 15px;">Assistente Virtual:</div>
+                    <div style="margin-bottom: 10px;">Selecione o tipo de atendimento que você deseja:</div>
+                    <div class="menu-option">👩‍⚕️ Atendimento do Pronto</div>
+                    <div class="menu-option">🧠 Teleterapia</div>
+                    <div class="menu-option new">🏥 Fale com sua unidade de saúde</div>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <strong>💡 Melhoria Implementada:</strong> Adição da opção "Fale com sua unidade de saúde" para facilitar o acesso direto aos serviços locais de saúde.
+            </div>
+        </div>
+
+        <div class="chatbot-section">
+            <div class="chatbot-header">
+                <h2>🤖 Chatbot Interativo - Teste a Nova Funcionalidade</h2>
+                <p>Clique na opção abaixo para iniciar o atendimento</p>
+                <button class="restart-btn" onclick="restartChat()" id="restartBtn" style="display: none;">🔄 Reiniciar Chat</button>
+            </div>
+            
+            <div class="chat-container" id="chatContainer">
+                <div class="message bot">
+                    Olá! Bem-vindo ao sistema de atendimento das Unidades de Saúde! 👋<br><br>
+                    Selecione o tipo de atendimento que você deseja:
+                </div>
+                <div class="quick-buttons" id="initialButtons">
+                    <button class="quick-btn" onclick="selectOption('pronto')">👩‍⚕️ Atendimento do Pronto</button>
+                    <button class="quick-btn" onclick="selectOption('teleterapia')">🧠 Teleterapia</button>
+                    <button class="quick-btn" onclick="selectOption('unidade')" style="background: #28a745;">🏥 Fale com sua unidade de saúde</button>
+                </div>
+            </div>
+            
+            <div class="input-container">
+                <div class="input-group">
+                    <input type="text" id="messageInput" placeholder="Digite sua mensagem..." disabled>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>Enviar</button>
+                </div>
+                <div class="quick-buttons" id="quickButtons" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados das unidades de saúde organizados por bairro
+        const unidadesPorBairro = {
+            "ANTARES": ["UNIDADE BÁSICA DE SAÚDE ARTHUR RAMOS /CEO RAFAEL DE MATOS"],
+            "BARRO DURO": ["UDA GOVERNADOR DIVALDO SURUAGY – UMJ"],
+            "BENEDITO BENTES": ["UNIDADE DE SAÚDE DA FAMILIA DÍDIMO OTTO KUMMER (CARMINHA)", "UNIDADE DE SAÚDE DA FAMILIA FREI DAMIÃO", "UNIDADE DE SÁUDE DA FAMILIA ROBSON CAVANCANTE DE MELO (FREITAS NETO)", "UNIDADE DE SAUDE DA FAMILIA ALIOMAR DE ALMEIDA LINS - PASSAREDO", "UNIDADE DE SAÚDE DA FAMILIA CARLA NOGUEIRA", "UNIDADE DE REFERÊNCIA EM SAÚDE HAMILTON FALCAO", "UNIDADE DA SAÚDE DA FAMILIA CAIC BENEDITO BENTES"],
+            "BOM PARTO": ["UNIDADE BÁSICA DE SAÚDE GERALDO MELO"],
+            "BREJAL": ["UNIDADE DE SAÚDE DA FAMILIA JARDIM SAO FRANCISCO"],
+            "CENTRO": ["DURVAL CORTEZ"],
+            "CANAÃ": ["UNIDADE DE SAÚDE DA FAMÍLIA SÃO JOSÉ – CANAÃ"],
+            "CHÃ DE BEBEDOURO": ["UNIDADE DE REFERÊNCIA EM SAÚDE PAM BEBEDOURO"],
+            "CHÃ DE JAQUEIRA": ["UNIDADE DE SAÚDE DA FAMILIA PARAÍSO DO HORTO - AMACOPH"],
+            "CIDADE UNIVERSITARIA": ["UNIDADE BÁSICA DE SÁÚDE JORGE DUARTE QUINTELA CAVALCANTE", "UNIDADE BÁSICA DE SAÚDE TEREZA BARBOSA", "UNIDADE DE SÁUDE DA FAMÍLIA DENISSON MENEZES"],
+            "CLIMA BOM": ["UNIDADE DE SAÚDE DA FAMÍLIA ROSANE COLLOR", "UNIDADE BÁSICA DE SAÚDE DR. DJALMA LOUREIRO"],
+            "CRUZ DAS ALMAS": ["SÃO FRANCISCO DE PAULA - GROTA DO ARROZ", "UNIDADE DOCENTE ASSISTENCIAL JOSÉ LAGES FILHO – UNIT"],
+            "DIQUE ESTRADA": ["UNIDADE DE SAÚDE DA FAMILIA-CAIC VIRGEM DOS POBRES"],
+            "FAROL": ["UNIDADE DE REFERÊNCIA EM SAÚDE PITANGUINHA", "UNIDADE DE SAÚDE DA FAMÍLIA PAULO OLIVEIRA COSTA – UDA - CESMAC"],
+            "FEITOSA": ["UNIDADE DE SAÚDE DA FAMÍLIA DR. PAULO LEAL"],
+            "FERNÃO VELHO": ["UNIDADE DE SAÚDE DA FAMILIA JOSÉ BERNARDES NETO", "UNIDADE DE SAÚDE DA FAMILIA EDVALDO SILVA"],
+            "GRACILIANO RAMOS": ["UNIDADE DE SAÚDE DA FAMÍLIA GRACILIANO RAMOS"],
+            "GUAXUMA": ["GUAXUMA"],
+            "IPIOCA": ["UNIDADE DE SAÚDE DA FAMÍLIA DR JORGE DAVID NASSER"],
+            "JACARECICA": ["UNIDADE DE REFERÊNCIA EM SAÚDE MARIA CONCEIÇÃO FONSECA PARANHOS"],
+            "JACINTINHO": ["UNIDADE BÁSICA DE SAÚDE FELÍCIO NAPOLEÂO", "UNIDADE DE SAÚDE DA FAMÍLIA JOÃO MOREIRA (GROTA DO MOREIRA)", "UNIDADE DE SAÚDE DA FAMÍLIA JOSÉ ARAÚJO SILVA", "UNIDADE BÁSICA DE SAÚDE WALDOMIRO ALENCAR"],
+            "JARAGUA": ["UNIDADE BÁSICA DE SAÚDE OSVALDO BRANDAO VILELA"],
+            "PETROPOLIS": ["UNIDADE DE REFERÊNCIA EM SAÚDE PAM BEBEDOURO", "UNIDADE DE SAÚDE DA FAMILIA JOAO SAMPAIO"],
+            "NOVO MUNDO": ["UNIDADE DE SAÚDE DA FAMÍLIA NOVO MUNDO"],
+            "OURO PRETO": ["UNIDADE DE SAÚDE DA FAMÍLIA OURO PRETO", "UBS MARIA TEREZA HOLANDA"],
+            "PESCARIA": ["UNIDADE DE SAÚDE FAMÍLIA PESCARIA"],
+            "PINHEIRO": ["FAMILIA SÃO VICENTE DE PAULA"],
+            "POÇO": ["UNIDADE DE SAÚDE DA FAMILIA REGINALDO"],
+            "PONTA GROSSA": ["UNIDADE BÁSICA DE SAÚDE PAM DIQUE ESTRADA"],
+            "PONTA VERDE": ["UNIDADE BÁSICA DE SAÚDE OSVALDO BRANDAO VILELA"],
+            "PONTAL DA BARRA": ["UNIDADE DE SAÚDE DA FAMILIA TARCÍSIO PALMEIRA"],
+            "PRADO": ["UNIDADE DE SAÚDE DA FAMILIA PROF.DURVAL CORTEZ"],
+            "RIACHO DOCE": ["UNIDADE DE SAÚDE FAMÍLIA LOURENÇA DE CARVALHO – RIACHO DOCE"],
+            "RIO NOVO": ["UNIDADE DE SAÚDE DA FAMILIA CLAUDIO MEDEIROS"],
+            "SANTA AMELIA": ["UNIDADE BÁSICA DE SAÚDE JOSÉ GUEDES DE FARIAS (ZEZITO)", "UNIDADE BÁSICA DE SAÚDE DR . WALTER DE MOURA LIMA"],
+            "SANTA LUCIA": ["UBS MARLENE FERNANDES LANVERLY DE MELO"],
+            "SANTOS DUMONT": ["UNIDADE DE SAÚDE DA FAMÍLIA JOÃO MACÁRIO"],
+            "SÃO JORGE": ["UNIDADE DE SAÚDE DA FAMÍLIA JOSÉ M. DE VASCONCELOS NETO - SÃO JORGE"],
+            "SERRARIA": ["UNIDADE BÁSICA DE SAÚDE JOSÉ TENÓRIO"],
+            "TABULEIRO": ["UNIDADE DE SAÚDE DA FAMILIA JOAO SAMPAIO", "UNIDADE SÁÚDE DA FAMÍLIA VEREADOR SÉRGIO QUINTELLA", "UNIDADE DE SAÚDE DA FAMÍLIA GALBA NOVAIS", "UNIDADE BÁSICA DE SAÚDE JOSÉ PIMENTEL AMORIM"],
+            "TRAPICHE DA BARRA": ["UNIDADE DE SAÚDE DA FAMILIA HELVIO AUTO"],
+            "VERGEL DO LAGO": ["UNIDADE REFERÊNCIA DE SAÚDE ROLAND SIMON"],
+            "VILLAGE": ["UNIDADE SAÚDE DA FAMÍLIA VILLAGE CAMPESTRE I", "UNIDADE DE SAÚDE DA FAMÍLIA VILLAGE CAMPESTRE II"]
+        };
+
+        let chatState = {
+            step: 'menu',
+            userName: '',
+            userBairro: '',
+            selectedUnidade: ''
+        };
+
+        function selectOption(option) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageInput = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            
+            // Esconder os botões de opção inicial
+            document.getElementById('initialButtons').style.display = 'none';
+            
+            if (option === 'unidade') {
+                addMessage('user', '🏥 Fale com sua unidade de saúde');
+                
+                setTimeout(() => {
+                    addMessage('bot', 'Perfeito! Vou te conectar com sua unidade de saúde local. 😊<br><br>Para começar, qual é o seu nome?');
+                    chatState.step = 'name';
+                    messageInput.disabled = false;
+                    sendBtn.disabled = false;
+                    messageInput.focus();
+                }, 1000);
+            } else if (option === 'pronto') {
+                addMessage('user', '👩‍⚕️ Atendimento do Pronto');
+                setTimeout(() => {
+                    addMessage('bot', 'Você selecionou Atendimento do Pronto. Esta funcionalidade será implementada em breve! 🚑');
+                }, 1000);
+            } else if (option === 'teleterapia') {
+                addMessage('user', '🧠 Teleterapia');
+                setTimeout(() => {
+                    addMessage('bot', 'Você selecionou Teleterapia. Esta funcionalidade será implementada em breve! 🧠💻');
+                }, 1000);
+            }
+        }
+
+        function addMessage(sender, text) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = text;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (message === '') return;
+            
+            addMessage('user', message);
+            messageInput.value = '';
+            
+            processMessage(message);
+        }
+
+        function processMessage(message) {
+            setTimeout(() => {
+                switch (chatState.step) {
+                    case 'name':
+                        chatState.userName = message;
+                        addMessage('bot', `Prazer em conhecê-lo, ${chatState.userName}! 👋<br><br>Agora me diga, em qual bairro você mora?`);
+                        chatState.step = 'bairro';
+                        
+                        // Mostrar alguns bairros como sugestão
+                        showQuickButtons(Object.keys(unidadesPorBairro).slice(0, 6));
+                        break;
+                        
+                    case 'bairro':
+                        const bairroNormalizado = message.toUpperCase().trim();
+                        chatState.userBairro = bairroNormalizado;
+                        
+                        if (unidadesPorBairro[bairroNormalizado]) {
+                            const unidades = unidadesPorBairro[bairroNormalizado];
+                            let unidadesText = '';
+                            
+                            if (unidades.length === 1) {
+                                chatState.selectedUnidade = unidades[0];
+                                unidadesText = `Encontrei sua unidade de saúde! 🎯<br><br><strong>${unidades[0]}</strong>`;
+                            } else {
+                                unidadesText = `Encontrei ${unidades.length} unidades de saúde no bairro ${bairroNormalizado}:<br><br>`;
+                                unidades.forEach((unidade, index) => {
+                                    unidadesText += `${index + 1}. ${unidade}<br>`;
+                                });
+                                unidadesText += '<br>Qual dessas unidades você está vinculado(a)?';
+                                showQuickButtons(unidades.map((u, i) => `${i + 1}`));
+                            }
+                            
+                            addMessage('bot', unidadesText);
+                            
+                            if (unidades.length === 1) {
+                                setTimeout(() => {
+                                    addMessage('bot', `${chatState.userName}, agora me conte: qual dúvida você gostaria de esclarecer? 🤔<br><br>Digite sua pergunta e eu te conectarei com um atendente humano da ${chatState.selectedUnidade}.`);
+                                    chatState.step = 'duvida';
+                                }, 1500);
+                            } else {
+                                chatState.step = 'escolher_unidade';
+                            }
+                        } else {
+                            addMessage('bot', `Hmm, não encontrei unidades de saúde para o bairro "${message}". 😕<br><br>Poderia verificar a grafia ou tentar outro nome para o bairro?`);
+                            showQuickButtons(Object.keys(unidadesPorBairro).slice(0, 6));
+                        }
+                        break;
+                        
+                    case 'escolher_unidade':
+                        const numeroEscolhido = parseInt(message);
+                        const unidades = unidadesPorBairro[chatState.userBairro];
+                        
+                        if (numeroEscolhido >= 1 && numeroEscolhido <= unidades.length) {
+                            chatState.selectedUnidade = unidades[numeroEscolhido - 1];
+                            addMessage('bot', `Perfeito! Você escolheu: <strong>${chatState.selectedUnidade}</strong> ✅<br><br>Agora me conte: qual dúvida você gostaria de esclarecer? 🤔`);
+                            chatState.step = 'duvida';
+                            hideQuickButtons();
+                        } else {
+                            addMessage('bot', 'Por favor, digite o número correspondente à sua unidade de saúde.');
+                        }
+                        break;
+                        
+                    case 'duvida':
+                        addMessage('bot', `Obrigado, ${chatState.userName}! Recebi sua dúvida: "${message}" 📝<br><br>🔄 <strong>Conectando você com um atendente humano da ${chatState.selectedUnidade}...</strong><br><br>⏱️ Aguarde um momento, em breve você será atendido por nossa equipe!`);
+                        
+                        setTimeout(() => {
+                            addMessage('bot', '✅ <strong>Atendimento transferido com sucesso!</strong><br><br>Um de nossos atendentes entrará em contato em breve. Tenha um ótimo dia! 😊🏥<br><br>🔄 <em>Você pode reiniciar o chat a qualquer momento clicando no botão "Reiniciar Chat" no topo.</em>');
+                            document.getElementById('messageInput').disabled = true;
+                            document.getElementById('sendBtn').disabled = true;
+                            document.getElementById('restartBtn').style.display = 'block';
+                        }, 3000);
+                        break;
+                }
+            }, 1000);
+        }
+
+        function showQuickButtons(options) {
+            const quickButtonsDiv = document.getElementById('quickButtons');
+            quickButtonsDiv.innerHTML = '';
+            quickButtonsDiv.style.display = 'flex';
+            
+            options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'quick-btn';
+                btn.textContent = option;
+                btn.onclick = () => {
+                    document.getElementById('messageInput').value = option;
+                    sendMessage();
+                    hideQuickButtons();
+                };
+                quickButtonsDiv.appendChild(btn);
+            });
+        }
+
+        function hideQuickButtons() {
+            document.getElementById('quickButtons').style.display = 'none';
+        }
+
+        function restartChat() {
+            // Resetar estado do chat
+            chatState = {
+                step: 'menu',
+                userName: '',
+                userBairro: '',
+                selectedUnidade: ''
+            };
+            
+            // Limpar container do chat
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.innerHTML = '';
+            
+            // Mensagem inicial
+            addMessage('bot', 'Olá! Bem-vindo ao sistema de atendimento das Unidades de Saúde! 👋<br><br>Selecione o tipo de atendimento que você deseja:');
+            
+            // Mostrar botões iniciais
+            const initialButtons = `
+                <div class="quick-buttons" id="initialButtons">
+                    <button class="quick-btn" onclick="selectOption('pronto')">👩‍⚕️ Atendimento do Pronto</button>
+                    <button class="quick-btn" onclick="selectOption('teleterapia')">🧠 Teleterapia</button>
+                    <button class="quick-btn" onclick="selectOption('unidade')" style="background: #28a745;">🏥 Fale com sua unidade de saúde</button>
+                </div>
+            `;
+            chatContainer.insertAdjacentHTML('beforeend', initialButtons);
+            
+            // Reabilitar inputs
+            document.getElementById('messageInput').disabled = true;
+            document.getElementById('sendBtn').disabled = true;
+            document.getElementById('messageInput').value = '';
+            
+            // Esconder botão de restart
+            document.getElementById('restartBtn').style.display = 'none';
+        }
+
+        // Permitir envio com Enter
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
