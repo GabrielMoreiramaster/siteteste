@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Programa Olhar da Gente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            font-weight: 300;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .metric-value {
+            font-size: 3em;
+            font-weight: 700;
+            color: #4f46e5;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric-label {
+            font-size: 1.1em;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .table-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .table-title {
+            font-size: 2em;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .filter-select {
+            padding: 12px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 500;
+            background: white;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 280px;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .clear-filter {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-filter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 0.95em;
+        }
+
+        .data-table th {
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 20px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 3px solid #3730a3;
+        }
+
+        .data-table td {
+            padding: 18px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background-color 0.2s ease;
+        }
+
+        .data-table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .data-table tr:nth-child(even):hover {
+            background-color: #f1f5f9;
+        }
+
+        .municipality-name {
+            font-weight: 700;
+            color: #4f46e5;
+            font-size: 1.1em;
+        }
+
+        .number-cell {
+            font-weight: 600;
+            color: #1e293b;
+            text-align: center;
+        }
+
+        .date-cell {
+            color: #475569;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Estilos especiais para Maragogi */
+        .maragogi-1-row {
+            background: linear-gradient(45deg, #e3f2fd, #bbdefb) !important;
+            border-left: 6px solid #2196f3;
+        }
+
+        .maragogi-1-row:hover {
+            background: linear-gradient(45deg, #bbdefb, #90caf9) !important;
+        }
+
+        .maragogi-2-row {
+            background: linear-gradient(45deg, #e0f2f1, #b2dfdb) !important;
+            border-left: 6px solid #009688;
+        }
+
+        .maragogi-2-row:hover {
+            background: linear-gradient(45deg, #b2dfdb, #80cbc4) !important;
+        }
+
+        .maragogi-consolidado-row {
+            background: linear-gradient(45deg, #fff3e0, #ffcc02) !important;
+            border-left: 8px solid #ff9800;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
+        }
+
+        .maragogi-consolidado-row:hover {
+            background: linear-gradient(45deg, #ffe0b2, #ffb74d) !important;
+            transform: translateY(-2px);
+        }
+
+        .maragogi-consolidado-row .municipality-name {
+            color: #e65100;
+            font-size: 1.2em;
+        }
+
+        .timeline-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .timeline-title {
+            font-size: 2em;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .municipality-timeline {
+            margin-bottom: 40px;
+        }
+
+        .municipality-timeline:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-municipality-name {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #4f46e5;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .timeline-events {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .timeline-event {
+            background: linear-gradient(45deg, #f8fafc, #f1f5f9);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border-left: 4px solid #4f46e5;
+            transition: transform 0.2s ease;
+        }
+
+        .timeline-event:hover {
+            transform: translateX(5px);
+        }
+
+        .event-date {
+            font-size: 0.9em;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+
+        .event-description {
+            font-size: 0.95em;
+            color: #475569;
+            margin-top: 5px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .table-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-container {
+                justify-content: center;
+            }
+            
+            .timeline-events {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-table {
+                font-size: 0.85em;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 12px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Programa Olhar da Gente</h1>
+            <p>Relatório Executivo de Cirurgias de Catarata</p>
+        </div>
+
+        <!-- Métricas Principais -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">1.147</div>
+                <div class="metric-label">Pacientes Triados</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">437</div>
+                <div class="metric-label">Cirurgias 1º Olho</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">292</div>
+                <div class="metric-label">Cirurgias 2º Olho</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">729</div>
+                <div class="metric-label">Total de Procedimentos</div>
+            </div>
+        </div>
+
+        <!-- Tabela Interativa -->
+        <div class="table-section">
+            <div class="table-header">
+                <div class="table-title">Dados Detalhados por Município</div>
+                <div class="filter-container">
+                    <span class="filter-label">Filtrar por:</span>
+                    <select id="municipalityFilter" class="filter-select">
+                        <option value="">🏘️ Todos os Municípios</option>
+                        <option value="SAO_JOSE_DA_LAJE">📍 São José da Laje</option>
+                        <option value="FLEXEIRAS">📍 Flexeiras</option>
+                        <option value="SATUBA">📍 Satuba</option>
+                        <option value="MARAGOGI_1">📍 Maragogi - 1ª Triagem</option>
+                        <option value="MARAGOGI_2">📍 Maragogi - 2ª Triagem</option>
+                        <option value="MARAGOGI_CONSOLIDADO">⭐ Maragogi (CONSOLIDADO)</option>
+                    </select>
+                    <button onclick="clearFilter()" class="clear-filter">Limpar Filtro</button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Município</th>
+                            <th>Pacientes Triados</th>
+                            <th>Cirurgias 1º Olho</th>
+                            <th>Cirurgias 2º Olho</th>
+                            <th>Total Procedimentos</th>
+                            <th>Data Triagem</th>
+                            <th>Data Cirurgia 1º Olho</th>
+                            <th>Data Cirurgia 2º Olho</th>
+                            <th>Data Revisão 1º Olho</th>
+                            <th>Data Revisão 2º Olho</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Dados serão inseridos via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline-section">
+            <div class="timeline-title">Cronograma de Execução</div>
+            
+            <div class="municipality-timeline">
+                <div class="timeline-municipality-name">São José da Laje</div>
+                <div class="timeline-events">
+                    <div class="timeline-event">
+                        <div class="event-date">08/08/2025</div>
+                        <div class="event-description">Triagem realizada</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">16/08/2025</div>
+                        <div class="event-description">Cirurgias 1º olho</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">19/08/2025</div>
+                        <div class="event-description">Revisão 1º olho</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">23/08/2025</div>
+                        <div class="event-description">Cirurgias 2º olho</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">26/08/2025</div>
+                        <div class="event-description">Revisão 2º olho</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="municipality-timeline">
+                <div class="timeline-municipality-name">Flexeiras</div>
+                <div class="timeline-events">
+                    <div class="timeline-event">
+                        <div class="event-date">15/08/2025</div>
+                        <div class="event-description">Triagem realizada</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">24/08/2025</div>
+                        <div class="event-description">Cirurgias 1º olho</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">25/08/2025</div>
+                        <div class="event-description">Revisão 1º olho</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">31/08/2025</div>
+                        <div class="event-description">Cirurgias 2º olho</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">03/09/2025</div>
+                        <div class="event-description">Revisão 2º olho</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="municipality-timeline">
+                <div class="timeline-municipality-name">Satuba</div>
+                <div class="timeline-events">
+                    <div class="timeline-event">
+                        <div class="event-date">22/08/2025</div>
+                        <div class="event-description">Triagem realizada</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">30/08/2025</div>
+                        <div class="event-description">Cirurgias 1º olho</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">03/09/2025</div>
+                        <div class="event-description">Revisão 1º olho</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">07/09/2025</div>
+                        <div class="event-description">Cirurgias 2º olho</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">09/09/2025</div>
+                        <div class="event-description">Revisão 2º olho</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="municipality-timeline">
+                <div class="timeline-municipality-name">Maragogi</div>
+                <div class="timeline-events">
+                    <div class="timeline-event">
+                        <div class="event-date">28-29/08/2025</div>
+                        <div class="event-description">Triagens realizadas</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">06/09/2025</div>
+                        <div class="event-description">Cirurgias 1º olho (1ª triagem)</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">13/09/2025</div>
+                        <div class="event-description">Cirurgias 1º olho (2ª triagem)</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">14/09/2025</div>
+                        <div class="event-description">Cirurgias 2º olho (1ª triagem)</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">21/09/2025</div>
+                        <div class="event-description">Cirurgias 2º olho (2ª triagem)</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">08/09/2025</div>
+                        <div class="event-description">Revisão 1º olho (1ª triagem)</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">15/09/2025</div>
+                        <div class="event-description">Revisão 2º olho (1ª triagem)</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="event-date">15/09/2025</div>
+                        <div class="event-description">Revisão 1º olho (2ª triagem)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DADOS COMPLETOS - VERSÃO ATUALIZADA
+        const todosOsDados = [
+            {
+                id: 'SAO_JOSE_DA_LAJE',
+                name: 'São José da Laje',
+                triaged: 244,
+                surgery1st: 146,
+                surgery2nd: 125,
+                totalProcedures: 271,
+                triageDate: '08/08/2025',
+                surgery1stDate: '16/08/2025',
+                surgery2ndDate: '23/08/2025',
+                revision1stDate: '19/08/2025',
+                revision2ndDate: '26/08/2025'
+            },
+            {
+                id: 'FLEXEIRAS',
+                name: 'Flexeiras',
+                triaged: 208,
+                surgery1st: 99,
+                surgery2nd: 87,
+                totalProcedures: 186,
+                triageDate: '15/08/2025',
+                surgery1stDate: '24/08/2025',
+                surgery2ndDate: '31/08/2025',
+                revision1stDate: '25/08/2025',
+                revision2ndDate: '03/09/2025'
+            },
+            {
+                id: 'SATUBA',
+                name: 'Satuba',
+                triaged: 139,
+                surgery1st: 99,
+                surgery2nd: 80,
+                totalProcedures: 179,
+                triageDate: '22/08/2025',
+                surgery1stDate: '30/08/2025',
+                surgery2ndDate: '07/09/2025',
+                revision1stDate: '03/09/2025',
+                revision2ndDate: '09/09/2025'
+            },
+            {
+                id: 'MARAGOGI_1',
+                name: 'Maragogi - 1ª Triagem',
+                triaged: '210',
+                surgery1st: 93,
+                surgery2nd: '88 (previsão)',
+                totalProcedures:'181 (previsão)',
+                triageDate: '28/08/2025',
+                surgery1stDate: '06/09/2025',
+                surgery2ndDate: '14/09/2025',
+                revision1stDate: '08/09/2025',
+                revision2ndDate: '15/09/2025'
+            },
+            {
+                id: 'MARAGOGI_2',
+                name: 'Maragogi - 2ª Triagem',
+                triaged: '346',
+                surgery1st: '178 (previsão)',
+                surgery2nd: 'A definir',
+                totalProcedures: '178+ (previsão)',
+                triageDate: '29/08/2025',
+                surgery1stDate: '13/09/2025',
+                surgery2ndDate: '21/09/2025',
+                revision1stDate: '15/09/2025',
+                revision2ndDate: 'Não definido'
+            }
+        ];
+
+        // LINHA CONSOLIDADA DE MARAGOGI
+        const maragogiConsolidado = {
+            id: 'MARAGOGI_CONSOLIDADO',
+            name: ' MARAGOGI - CONSOLIDADO ',
+            triaged: '556',
+            surgery1st: '271 (93 realizadas + 178 previstas)',
+            surgery2nd: '88+ (previsão mínima)',
+            totalProcedures: '359+ (Previsão Mínima)',
+            triageDate: '28/08 e 29/08/2025',
+            surgery1stDate: '06/09 e 13/09/2025',
+            surgery2ndDate: '14/09 e 21/09/2025',
+            revision1stDate: '08/09 e 15/09/2025',
+            revision2ndDate: '15/09 + A definir'
+        };
+
+        // Função para renderizar a tabela
+        function criarTabela(dados = todosOsDados) {
+            const tbody = document.getElementById('tableBody');
+            
+            if (dados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="no-data">❌ Nenhum município encontrado!</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = dados.map(municipio => {
+                let classeCSS = '';
+                
+                if (municipio.id === 'MARAGOGI_1') {
+                    classeCSS = 'maragogi-1-row';
+                } else if (municipio.id === 'MARAGOGI_2') {
+                    classeCSS = 'maragogi-2-row';
+                } else if (municipio.id === 'MARAGOGI_CONSOLIDADO') {
+                    classeCSS = 'maragogi-consolidado-row';
+                }
+                
+                return `
+                <tr data-municipality="${municipio.id}" class="${classeCSS}">
+                    <td class="municipality-name">${municipio.name}</td>
+                    <td class="number-cell">${municipio.triaged}</td>
+                    <td class="number-cell">${municipio.surgery1st}</td>
+                    <td class="number-cell">${municipio.surgery2nd}</td>
+                    <td class="number-cell">${municipio.totalProcedures}</td>
+                    <td class="date-cell">${municipio.triageDate}</td>
+                    <td class="date-cell">${municipio.surgery1stDate}</td>
+                    <td class="date-cell">${municipio.surgery2ndDate}</td>
+                    <td class="date-cell">${municipio.revision1stDate}</td>
+                    <td class="date-cell">${municipio.revision2ndDate}</td>
+                </tr>
+            `;
+            }).join('');
+        }
+
+        // Função para filtrar
+        function aplicarFiltro() {
+            const valorSelecionado = document.getElementById('municipalityFilter').value;
+            
+            if (valorSelecionado === '') {
+                // Mostrar todos
+                criarTabela(todosOsDados);
+            } else if (valorSelecionado === 'MARAGOGI_CONSOLIDADO') {
+                // Mostrar SOMA de Maragogi
+                criarTabela([maragogiConsolidado]);
+            } else {
+                // Mostrar município específico
+                const dadosFiltrados = todosOsDados.filter(municipio => 
+                    municipio.id === valorSelecionado
+                );
+                criarTabela(dadosFiltrados);
+            }
+        }
+
+        // Limpar filtro
+        function clearFilter() {
+            document.getElementById('municipalityFilter').value = '';
+            criarTabela(todosOsDados);
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            criarTabela();
+            document.getElementById('municipalityFilter').addEventListener('change', aplicarFiltro);
+        });
+    </script>
+</body>
+</html>
