@@ -16,7 +16,7 @@
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e4d7b 0%, #2B5C8A 50%, #3d7ba8 100%);
             min-height: 100vh;
             padding: 20px;
             overflow-x: hidden;
@@ -52,7 +52,7 @@
             left: 0;
             width: 100%;
             height: 5px;
-            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            background: linear-gradient(90deg, #FF8C42, #FFA860, #FF8C42);
             background-size: 200% 100%;
             animation: gradientMove 3s ease infinite;
         }
@@ -63,10 +63,7 @@
         }
         
         .header h1 {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #2B5C8A;
             font-size: 3em;
             font-weight: 700;
             margin-bottom: 10px;
@@ -134,11 +131,13 @@
             font-size: 3.5em;
             font-weight: 700;
             margin: 15px 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #2B5C8A;
             animation: countUp 2s ease-out;
+            transition: color 0.3s ease;
+        }
+        
+        .metric-card:hover .metric-number {
+            color: #FF8C42;
         }
         
         @keyframes countUp {
@@ -189,7 +188,7 @@
             left: 0;
             width: 100%;
             height: 6px;
-            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #667eea);
+            background: linear-gradient(90deg, #FF8C42, #FFA860, #FF8C42);
             background-size: 200% 100%;
             animation: gradientMove 4s ease infinite;
         }
@@ -202,10 +201,7 @@
         .goal-header h2 {
             font-size: 2.5em;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #2B5C8A;
             margin-bottom: 10px;
         }
         
@@ -242,11 +238,13 @@
         .goal-number {
             font-size: 3.5em;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #2B5C8A;
             margin: 10px 0;
+            transition: color 0.3s ease;
+        }
+        
+        .goal-stat-item:hover .goal-number {
+            color: #FF8C42;
         }
         
         .goal-number.percentage::after {
@@ -264,7 +262,7 @@
         .goal-divider {
             width: 2px;
             height: 100px;
-            background: linear-gradient(180deg, transparent, #667eea, transparent);
+            background: linear-gradient(180deg, transparent, #2B5C8A, transparent);
         }
         
         .goal-progress-container {
@@ -283,7 +281,7 @@
         
         .goal-progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            background: linear-gradient(90deg, #FF8C42, #FFA860, #FFB875);
             background-size: 200% 100%;
             animation: progressShine 3s ease infinite, fillGoalBar 2s ease-out;
             border-radius: 25px;
@@ -292,6 +290,7 @@
             justify-content: flex-end;
             padding-right: 20px;
             position: relative;
+            box-shadow: 0 4px 15px rgba(255, 140, 66, 0.4);
         }
         
         @keyframes fillGoalBar {
@@ -351,7 +350,7 @@
         .projection-value {
             font-size: 1.4em;
             font-weight: 700;
-            color: #667eea;
+            color: #2B5C8A;
         }
         
         /* INDICADORES */
@@ -385,7 +384,7 @@
         .indicator-value {
             font-size: 2.5em;
             font-weight: 700;
-            color: #667eea;
+            color: #2B5C8A;
         }
         
         .progress-bar {
@@ -399,10 +398,11 @@
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #FF8C42, #FFA860);
             border-radius: 10px;
             transition: width 2s ease-out;
             animation: fillBar 2s ease-out;
+            box-shadow: 0 2px 8px rgba(255, 140, 66, 0.3);
         }
         
         @keyframes fillBar {
@@ -421,7 +421,7 @@
         .timeline-title {
             font-size: 2em;
             font-weight: 700;
-            color: #667eea;
+            color: #2B5C8A;
             margin-bottom: 30px;
             text-align: center;
         }
@@ -438,7 +438,7 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            background: linear-gradient(180deg, #667eea, #764ba2);
+            background: linear-gradient(180deg, #FF8C42, #FFA860, #FF8C42);
             transform: translateX(-50%);
         }
         
@@ -494,25 +494,25 @@
             width: 30px;
             height: 30px;
             background: white;
-            border: 5px solid #667eea;
+            border: 5px solid #FF8C42;
             border-radius: 50%;
             z-index: 10;
-            box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 0 0 8px rgba(255, 140, 66, 0.2);
             animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
             0%, 100% {
-                box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.2);
+                box-shadow: 0 0 0 8px rgba(255, 140, 66, 0.2);
             }
             50% {
-                box-shadow: 0 0 0 15px rgba(102, 126, 234, 0.1);
+                box-shadow: 0 0 0 15px rgba(255, 140, 66, 0.1);
             }
         }
         
         .timeline-date {
             font-weight: 700;
-            color: #667eea;
+            color: #2B5C8A;
             font-size: 1.1em;
             margin-bottom: 10px;
         }
@@ -538,7 +538,7 @@
         }
         
         .timeline-stat strong {
-            color: #667eea;
+            color: #FF8C42;
             display: block;
             font-size: 1.2em;
         }
@@ -616,7 +616,7 @@
         }
         
         thead {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA860 100%);
         }
         
         th {
@@ -654,7 +654,8 @@
             border-radius: 50%;
             font-weight: 700;
             color: white;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA860 100%);
+            box-shadow: 0 3px 10px rgba(255, 140, 66, 0.3);
         }
         
         /* FOOTER */
@@ -1143,22 +1144,22 @@
                     {
                         label: 'Triados',
                         data: [244, 208, 139, 556, 1100, 381],
-                        backgroundColor: 'rgba(102, 126, 234, 0.7)',
-                        borderColor: 'rgba(102, 126, 234, 1)',
+                        backgroundColor: 'rgba(255, 140, 66, 0.7)',
+                        borderColor: 'rgba(255, 140, 66, 1)',
                         borderWidth: 2
                     },
                     {
                         label: '1º Olho',
                         data: [146, 99, 99, 206, 137, 303],
-                        backgroundColor: 'rgba(46, 204, 113, 0.7)',
-                        borderColor: 'rgba(46, 204, 113, 1)',
+                        backgroundColor: 'rgba(43, 92, 138, 0.7)',
+                        borderColor: 'rgba(43, 92, 138, 1)',
                         borderWidth: 2
                     },
                     {
                         label: '2º Olho',
                         data: [125, 87, 80, 188, 131, 143],
-                        backgroundColor: 'rgba(243, 156, 18, 0.7)',
-                        borderColor: 'rgba(243, 156, 18, 1)',
+                        backgroundColor: 'rgba(127, 181, 218, 0.7)',
+                        borderColor: 'rgba(127, 181, 218, 1)',
                         borderWidth: 2
                     }
                 ]
@@ -1203,11 +1204,11 @@
                 datasets: [{
                     data: [244, 208, 139, 556, 1100, 381],
                     backgroundColor: [
-                        'rgba(102, 126, 234, 0.8)',
-                        'rgba(231, 76, 60, 0.8)',
-                        'rgba(46, 204, 113, 0.8)',
-                        'rgba(243, 156, 18, 0.8)',
-                        'rgba(155, 89, 182, 0.8)',
+                        'rgba(255, 140, 66, 0.8)',
+                        'rgba(255, 168, 96, 0.8)',
+                        'rgba(43, 92, 138, 0.8)',
+                        'rgba(61, 123, 168, 0.8)',
+                        'rgba(127, 181, 218, 0.8)',
                         'rgba(52, 152, 219, 0.8)'
                     ],
                     borderWidth: 3,
@@ -1253,24 +1254,30 @@
                     {
                         label: 'Taxa de Conversão (%)',
                         data: [59.8, 47.6, 71.2, 37.1, 12.5, 79.5],
-                        borderColor: 'rgba(102, 126, 234, 1)',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderColor: 'rgba(255, 140, 66, 1)',
+                        backgroundColor: 'rgba(255, 140, 66, 0.1)',
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4,
                         pointRadius: 6,
-                        pointHoverRadius: 8
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: '#FF8C42',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
                     },
                     {
                         label: 'Eficiência 2º Olho (%)',
                         data: [85.6, 87.9, 80.8, 91.3, 95.6, 47.2],
-                        borderColor: 'rgba(46, 204, 113, 1)',
-                        backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                        borderColor: 'rgba(43, 92, 138, 1)',
+                        backgroundColor: 'rgba(43, 92, 138, 0.1)',
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4,
                         pointRadius: 6,
-                        pointHoverRadius: 8
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: '#2B5C8A',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
                     }
                 ]
             },
@@ -1321,12 +1328,12 @@
                     label: 'Total de Procedimentos',
                     data: [446, 394, 271, 268, 186, 179],
                     backgroundColor: [
-                        'rgba(231, 76, 60, 0.8)',
-                        'rgba(243, 156, 18, 0.8)',
-                        'rgba(52, 152, 219, 0.8)',
-                        'rgba(155, 89, 182, 0.8)',
-                        'rgba(46, 204, 113, 0.8)',
-                        'rgba(102, 126, 234, 0.8)'
+                        'rgba(255, 140, 66, 0.9)',
+                        'rgba(255, 168, 96, 0.8)',
+                        'rgba(255, 184, 117, 0.7)',
+                        'rgba(43, 92, 138, 0.8)',
+                        'rgba(61, 123, 168, 0.7)',
+                        'rgba(127, 181, 218, 0.7)'
                     ],
                     borderWidth: 0
                 }]
