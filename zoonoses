@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot - Serviços de Zoonoses</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .comparison-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .comparison-title {
+            text-align: center;
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .comparison-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #2ecc71;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-box.after {
+            border-left-color: #e74c3c;
+        }
+
+        .comparison-box h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .menu-option {
+            background: #e9ecef;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .menu-option:hover {
+            background: #dee2e6;
+            transform: translateY(-2px);
+        }
+
+        .menu-option.new {
+            background: #ffecb3;
+            border-color: #f39c12;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .chatbot-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .restart-btn {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .restart-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .chat-container {
+            height: 500px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .message.bot {
+            background: #2ecc71;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 18px 18px 18px 4px;
+            margin-right: auto;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.2);
+        }
+
+        .message.user {
+            background: #3498db;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 18px 18px 4px 18px;
+            margin-left: auto;
+            text-align: right;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #2ecc71;
+        }
+
+        .send-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .send-btn:hover {
+            background: #27ae60;
+        }
+
+        .send-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .quick-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .quick-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .quick-btn:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 10px 0;
+        }
+
+        .info-box {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #2ecc71;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐾 Sistema de Chatbot - Serviços de Zoonoses</h1>
+            <p>Demonstração da nova funcionalidade de atendimento</p>
+        </div>
+
+        <div class="comparison-section">
+            <h2 class="comparison-title">📊 Comparação: Antes vs Depois</h2>
+            <div class="comparison-container">
+                <div class="comparison-box">
+                    <h3>🔴 ANTES</h3>
+                    <div style="font-weight: bold; margin-bottom: 15px;">Assistente Virtual:</div>
+                    <div style="margin-bottom: 10px;">Selecione o tipo de atendimento que você deseja:</div>
+                    <div class="menu-option">👩‍⚕️ Atendimento do Pronto</div>
+                    <div class="menu-option">🧠 Teleterapia</div>
+                    <div class="menu-option">🩺👀 Olhar da Gente - Cirurgia de Catarata</div>
+                </div>
+                
+                <div class="comparison-box after">
+                    <h3>🟢 DEPOIS</h3>
+                    <div style="font-weight: bold; margin-bottom: 15px;">Assistente Virtual:</div>
+                    <div style="margin-bottom: 10px;">Selecione o tipo de atendimento que você deseja:</div>
+                    <div class="menu-option">👩‍⚕️ Atendimento do Pronto</div>
+                    <div class="menu-option">🧠 Teleterapia</div>
+                    <div class="menu-option">🩺👀 Olhar da Gente - Cirurgia de Catarata</div>
+                    <div class="menu-option new">🐧 Serviços Zoonoses</div>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <strong>💡 Melhoria Implementada:</strong> Adição da opção "Serviços Zoonoses" para facilitar o acesso a serviços de castração, vacinação, denúncias e informações sobre o Centro de Zoonoses.
+            </div>
+        </div>
+
+        <div class="chatbot-section">
+            <div class="chatbot-header">
+                <h2>🤖 Chatbot Interativo - Teste a Nova Funcionalidade</h2>
+                <p>Clique na opção abaixo para iniciar o atendimento</p>
+                <button class="restart-btn" onclick="restartChat()" id="restartBtn" style="display: none;">🔄 Reiniciar Chat</button>
+            </div>
+            
+            <div class="chat-container" id="chatContainer">
+                <div class="message bot">
+                    Olá! Bem-vindo ao sistema de atendimento! 👋<br><br>
+                    Selecione o tipo de atendimento que você deseja:
+                </div>
+                <div class="quick-buttons" id="initialButtons">
+                    <button class="quick-btn" onclick="selectOption('pronto')">👩‍⚕️ Atendimento do Pronto</button>
+                    <button class="quick-btn" onclick="selectOption('teleterapia')">🧠 Teleterapia</button>
+                    <button class="quick-btn" onclick="selectOption('catarata')">🩺👀 Olhar da Gente</button>
+                    <button class="quick-btn" onclick="selectOption('zoonoses')" style="background: #f39c12;">🐧 Serviços Zoonoses</button>
+                </div>
+            </div>
+            
+            <div class="input-container">
+                <div class="input-group">
+                    <input type="text" id="messageInput" placeholder="Digite sua mensagem..." disabled>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>Enviar</button>
+                </div>
+                <div class="quick-buttons" id="quickButtons" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chatState = {
+            step: 'menu',
+            userName: '',
+            userDocument: '',
+            selectedService: '',
+            situacao: ''
+        };
+
+        function selectOption(option) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageInput = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            
+            // Esconder os botões de opção inicial
+            document.getElementById('initialButtons').style.display = 'none';
+            
+            if (option === 'zoonoses') {
+                addMessage('user', '🐧 Serviços Zoonoses');
+                
+                setTimeout(() => {
+                    addMessage('bot', 'Perfeito! Bem-vindo aos Serviços de Zoonoses! 🐾<br><br>Como posso ajudá-lo hoje? Escolha uma das opções abaixo:');
+                    showQuickButtons([
+                        '📍 Localização e Horário de Atendimento',
+                        '🏥 Serviços Oferecidos',
+                        '📞 Disk Denúncia',
+                        '💉 Atendimento de Vacina'
+                    ]);
+                    chatState.step = 'menu_zoonoses';
+                }, 1000);
+            } else if (option === 'pronto') {
+                addMessage('user', '👩‍⚕️ Atendimento do Pronto');
+                setTimeout(() => {
+                    addMessage('bot', 'Você selecionou Atendimento do Pronto. Esta funcionalidade será implementada em breve! 🚑');
+                }, 1000);
+            } else if (option === 'teleterapia') {
+                addMessage('user', '🧠 Teleterapia');
+                setTimeout(() => {
+                    addMessage('bot', 'Você selecionou Teleterapia. Esta funcionalidade será implementada em breve! 🧠💻');
+                }, 1000);
+            } else if (option === 'catarata') {
+                addMessage('user', '🩺👀 Olhar da Gente - Cirurgia de Catarata');
+                setTimeout(() => {
+                    addMessage('bot', 'Você selecionou Olhar da Gente. Esta funcionalidade será implementada em breve! 👁️');
+                }, 1000);
+            }
+        }
+
+        function addMessage(sender, text) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = text;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (message === '') return;
+            
+            addMessage('user', message);
+            messageInput.value = '';
+            
+            processMessage(message);
+        }
+
+        function processMessage(message) {
+            setTimeout(() => {
+                switch (chatState.step) {
+                    case 'menu_zoonoses':
+                        handleMenuZoonoses(message);
+                        break;
+                    
+                    case 'servicos_oferecidos':
+                        handleServicosOferecidos(message);
+                        break;
+                    
+                    case 'disk_denuncia_nome':
+                        chatState.userName = message;
+                        addMessage('bot', `Obrigado, ${chatState.userName}! 📝<br><br>Agora, por favor, informe seu documento (CPF ou RG):`);
+                        chatState.step = 'disk_denuncia_documento';
+                        break;
+                    
+                    case 'disk_denuncia_documento':
+                        chatState.userDocument = message;
+                        addMessage('bot', `Documento registrado! ✅<br><br>Agora, por favor, descreva a situação que está acontecendo:<br><br>Pode ser:<br>🚫 Maus tratos<br>😢 Abandono de animais<br>🏠 Visita Zoo<br>📝 Ou outra situação que você queira relatar`);
+                        chatState.step = 'disk_denuncia_situacao';
+                        break;
+                    
+                    case 'disk_denuncia_situacao':
+                        chatState.situacao = message;
+                        addMessage('bot', `Obrigado pela denúncia, ${chatState.userName}! 📋<br><br><strong>Resumo do seu registro:</strong><br>👤 Nome: ${chatState.userName}<br>📄 Documento: ${chatState.userDocument}<br>📝 Situação: ${message}<br><br>🔄 Sua denúncia foi registrada e será encaminhada para análise da equipe de Zoonoses. Entraremos em contato em breve!<br><br>✅ <strong>Atendimento finalizado!</strong><br><br>Obrigado por ajudar na proteção dos animais! 🐾💚`);
+                        finalizarAtendimento();
+                        break;
+                    
+                    case 'vacina_nome':
+                        chatState.userName = message;
+                        addMessage('bot', `Prazer, ${chatState.userName}! 😊<br><br>Para finalizar o agendamento da vacina, por favor, informe seu documento (CPF ou RG):`);
+                        chatState.step = 'vacina_documento';
+                        break;
+                    
+                    case 'vacina_documento':
+                        chatState.userDocument = message;
+                        addMessage('bot', `Perfeito! ✅<br><br><strong>Dados registrados:</strong><br>👤 Nome: ${chatState.userName}<br>📄 Documento: ${message}<br><br>💉 Seu atendimento de vacina foi registrado!<br><br>📍 Compareça ao Centro de Zoonoses no horário de funcionamento:<br>🕐 Segunda a Sexta: 08:00 às 18:00<br>🕐 Sábado: 08:00 às 14:00<br><br>⚠️ <strong>Importante:</strong> Traga seu animal e o documento apresentado!<br><br>✅ <strong>Atendimento finalizado!</strong><br><br>Nos vemos em breve! 🐾💚`);
+                        finalizarAtendimento();
+                        break;
+                }
+            }, 1000);
+        }
+
+        function handleMenuZoonoses(message) {
+            hideQuickButtons();
+            
+            if (message === '📍 Localização e Horário de Atendimento') {
+                addMessage('bot', `📍 <strong>Centro de Controle de Zoonoses</strong><br><br>🗺️ <strong>Localização:</strong><br>Rua Exemplo, 123 - Bairro Central<br>CEP: 12345-678<br><br>🕐 <strong>Horário de Atendimento:</strong><br><br>📅 <strong>Segunda a Sexta-feira:</strong><br>⏰ 08:00 às 18:00<br><br>📅 <strong>Sábado:</strong><br>⏰ 08:00 às 14:00<br><br>🚫 <strong>Domingo:</strong> Fechado<br><br>⚠️ <em>Recomendamos chegar com antecedência!</em><br><br>Precisa de mais alguma informação? 😊`);
+                
+                setTimeout(() => {
+                    showQuickButtons(['✅ Informação esclarecida', '🔙 Voltar ao menu']);
+                    chatState.step = 'pos_info';
+                }, 1500);
+            }
+            else if (message === '🏥 Serviços Oferecidos') {
+                addMessage('bot', `🏥 <strong>Serviços Oferecidos pelo Centro de Zoonoses</strong><br><br>Selecione o serviço que você precisa:`);
+                showQuickButtons([
+                    '✂️ Castração',
+                    '🩺 Avaliação Veterinária',
+                    '💉 Vacinação',
+                    '🐕 Adoção de Animais',
+                    '📚 Educação em Saúde',
+                    '🔙 Voltar ao menu'
+                ]);
+                chatState.step = 'servicos_oferecidos';
+            }
+            else if (message === '📞 Disk Denúncia') {
+                addMessage('bot', `📞 <strong>Disk Denúncia - Zoonoses</strong><br><br>Você pode denunciar:<br><br>🚫 <strong>Maus tratos</strong> a animais<br>😢 <strong>Abandono</strong> de animais<br>🏠 <strong>Situações</strong> que necessitam visita do Zoo<br><br>Para registrar sua denúncia, preciso de algumas informações.<br><br>Por favor, informe seu <strong>nome completo</strong>:`);
+                chatState.step = 'disk_denuncia_nome';
+                document.getElementById('messageInput').disabled = false;
+                document.getElementById('sendBtn').disabled = false;
+                document.getElementById('messageInput').focus();
+            }
+            else if (message === '💉 Atendimento de Vacina') {
+                addMessage('bot', `💉 <strong>Atendimento de Vacina para Animais</strong><br><br>Oferecemos vacinação antirrábica e outras vacinas essenciais para seu pet! 🐶🐱<br><br>Para agendar, preciso de algumas informações.<br><br>Por favor, informe seu <strong>nome completo</strong>:`);
+                chatState.step = 'vacina_nome';
+                document.getElementById('messageInput').disabled = false;
+                document.getElementById('sendBtn').disabled = false;
+                document.getElementById('messageInput').focus();
+            }
+        }
+
+        function handleServicosOferecidos(message) {
+            hideQuickButtons();
+            
+            if (message === '✂️ Castração') {
+                addMessage('bot', `✂️ <strong>Serviço de Castração</strong><br><br>Oferecemos castração gratuita ou a preço social para cães e gatos! 🐕🐈<br><br><strong>Benefícios:</strong><br>✅ Previne doenças<br>✅ Controla a população de animais<br>✅ Reduz comportamentos indesejados<br><br>📞 <strong>Para agendar:</strong><br>Entre em contato com o Centro de Zoonoses ou compareça pessoalmente no horário de atendimento.<br><br>Quer saber mais sobre outros serviços?`);
+            }
+            else if (message === '🩺 Avaliação Veterinária') {
+                addMessage('bot', `🩺 <strong>Avaliação Veterinária</strong><br><br>Realizamos avaliações de saúde animal, incluindo:<br><br>✅ Exame clínico geral<br>✅ Avaliação de comportamento<br>✅ Orientações sobre cuidados<br>✅ Encaminhamentos quando necessário<br><br>📍 Compareça ao Centro de Zoonoses no horário de funcionamento com seu animal!<br><br>Precisa de mais informações?`);
+            }
+            else if (message === '💉 Vacinação') {
+                addMessage('bot', `💉 <strong>Vacinação Animal</strong><br><br>Oferecemos:<br><br>🐶 Vacina antirrábica para cães<br>🐱 Vacina antirrábica para gatos<br>💉 Outras vacinas essenciais<br><br><strong>Importante:</strong><br>✅ Gratuito para a comunidade<br>✅ Traga seu animal<br>✅ Documento do responsável<br><br>📍 Atendimento no Centro de Zoonoses durante o horário de funcionamento!<br><br>Quer agendar? Use a opção "Atendimento de Vacina" no menu principal!`);
+            }
+            else if (message === '🐕 Adoção de Animais') {
+                addMessage('bot', `🐕 <strong>Adoção de Animais</strong><br><br>Temos diversos animais esperando por um lar! 🏠💚<br><br><strong>Como funciona:</strong><br>1️⃣ Visite o Centro de Zoonoses<br>2️⃣ Conheça os animais disponíveis<br>3️⃣ Preencha o formulário de adoção<br>4️⃣ Aguarde a análise (48h)<br>5️⃣ Leve seu novo amigo para casa! 🎉<br><br>📋 <strong>Documentos necessários:</strong><br>✅ RG e CPF<br>✅ Comprovante de residência<br><br>Venha nos visitar! 🐾`);
+            }
+            else if (message === '📚 Educação em Saúde') {
+                addMessage('bot', `📚 <strong>Educação em Saúde</strong><br><br>Oferecemos programas educativos sobre:<br><br>🐾 Posse responsável de animais<br>🦟 Controle de zoonoses<br>🏥 Cuidados básicos com pets<br>🌍 Saúde pública e meio ambiente<br><br>👥 <strong>Atividades:</strong><br>✅ Palestras em escolas<br>✅ Visitas educativas ao Centro<br>✅ Campanhas de conscientização<br>✅ Material educativo gratuito<br><br>📞 Entre em contato para agendar uma ação educativa!`);
+            }
+            else if (message === '🔙 Voltar ao menu') {
+                addMessage('bot', 'Voltando ao menu principal! 😊<br><br>Como posso ajudá-lo?');
+                showQuickButtons([
+                    '📍 Localização e Horário de Atendimento',
+                    '🏥 Serviços Oferecidos',
+                    '📞 Disk Denúncia',
+                    '💉 Atendimento de Vacina'
+                ]);
+                chatState.step = 'menu_zoonoses';
+                return;
+            }
+            
+            setTimeout(() => {
+                showQuickButtons(['🏥 Ver outros serviços', '🔙 Voltar ao menu', '✅ Finalizar atendimento']);
+                chatState.step = 'pos_servico';
+            }, 1500);
+        }
+
+        function showQuickButtons(options) {
+            const quickButtonsDiv = document.getElementById('quickButtons');
+            quickButtonsDiv.innerHTML = '';
+            quickButtonsDiv.style.display = 'flex';
+            
+            options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'quick-btn';
+                btn.textContent = option;
+                btn.onclick = () => {
+                    if (chatState.step === 'servicos_oferecidos' || chatState.step === 'pos_servico') {
+                        addMessage('user', option);
+                        
+                        if (option === '🏥 Ver outros serviços') {
+                            setTimeout(() => {
+                                addMessage('bot', `🏥 <strong>Serviços Oferecidos</strong><br><br>Selecione o serviço que você precisa:`);
+                                showQuickButtons([
+                                    '✂️ Castração',
+                                    '🩺 Avaliação Veterinária',
+                                    '💉 Vacinação',
+                                    '🐕 Adoção de Animais',
+                                    '📚 Educação em Saúde',
+                                    '🔙 Voltar ao menu'
+                                ]);
+                                chatState.step = 'servicos_oferecidos';
+                            }, 1000);
+                        } else if (option === '✅ Finalizar atendimento') {
+                            setTimeout(() => {
+                                addMessage('bot', `Foi um prazer atendê-lo! 😊<br><br>✅ <strong>Atendimento finalizado!</strong><br><br>Se precisar de mais informações sobre o Centro de Zoonoses, estaremos sempre à disposição! 🐾💚<br><br>🔄 <em>Você pode reiniciar o chat a qualquer momento clicando no botão "Reiniciar Chat" no topo.</em>`);
+                                finalizarAtendimento();
+                            }, 1000);
+                        } else {
+                            processMessage(option);
+                        }
+                    } else if (chatState.step === 'pos_info') {
+                        addMessage('user', option);
+                        
+                        if (option === '✅ Informação esclarecida') {
+                            setTimeout(() => {
+                                addMessage('bot', `Ótimo! Fico feliz em ter ajudado! 😊<br><br>✅ <strong>Atendimento finalizado!</strong><br><br>Sempre que precisar dos serviços de Zoonoses, estaremos aqui! 🐾💚<br><br>🔄 <em>Você pode reiniciar o chat a qualquer momento clicando no botão "Reiniciar Chat" no topo.</em>`);
+                                finalizarAtendimento();
+                            }, 1000);
+                        } else if (option === '🔙 Voltar ao menu') {
+                            setTimeout(() => {
+                                addMessage('bot', 'Voltando ao menu principal! 😊<br><br>Como posso ajudá-lo?');
+                                showQuickButtons([
+                                    '📍 Localização e Horário de Atendimento',
+                                    '🏥 Serviços Oferecidos',
+                                    '📞 Disk Denúncia',
+                                    '💉 Atendimento de Vacina'
+                                ]);
+                                chatState.step = 'menu_zoonoses';
+                            }, 1000);
+                        }
+                    } else {
+                        document.getElementById('messageInput').value = option;
+                        sendMessage();
+                    }
+                };
+                quickButtonsDiv.appendChild(btn);
+            });
+        }
+
+        function hideQuickButtons() {
+            document.getElementById('quickButtons').style.display = 'none';
+        }
+
+        function finalizarAtendimento() {
+            document.getElementById('messageInput').disabled = true;
+            document.getElementById('sendBtn').disabled = true;
+            document.getElementById('restartBtn').style.display = 'block';
+            hideQuickButtons();
+        }
+
+        function restartChat() {
+            // Resetar estado do chat
+            chatState = {
+                step: 'menu',
+                userName: '',
+                userDocument: '',
+                selectedService: '',
+                situacao: ''
+            };
+            
+            // Limpar container do chat
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.innerHTML = '';
+            
+            // Mensagem inicial
+            addMessage('bot', 'Olá! Bem-vindo ao sistema de atendimento! 👋<br><br>Selecione o tipo de atendimento que você deseja:');
+            
+            // Mostrar botões iniciais
+            const initialButtons = `
+                <div class="quick-buttons" id="initialButtons">
+                    <button class="quick-btn" onclick="selectOption('pronto')">👩‍⚕️ Atendimento do Pronto</button>
+                    <button class="quick-btn" onclick="selectOption('teleterapia')">🧠 Teleterapia</button>
+                    <button class="quick-btn" onclick="selectOption('catarata')">🩺👀 Olhar da Gente</button>
+                    <button class="quick-btn" onclick="selectOption('zoonoses')" style="background: #f39c12;">🐧 Serviços Zoonoses</button>
+                </div>
+            `;
+            chatContainer.insertAdjacentHTML('beforeend', initialButtons);
+            
+            // Reabilitar inputs
+            document.getElementById('messageInput').disabled = true;
+            document.getElementById('sendBtn').disabled = true;
+            document.getElementById('messageInput').value = '';
+            
+            // Esconder botão de restart
+            document.getElementById('restartBtn').style.display = 'none';
+        }
+
+        // Permitir envio com Enter
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html
