@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convite Duo Valorant 🎮</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f1923 0%, #1a2632 50%, #ff4655 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(15, 25, 35, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(255, 70, 85, 0.5);
+            max-width: 600px;
+            border: 2px solid #ff4655;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ff4655;
+            color: #ff4655;
+        }
+
+        .valorant-logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-sim {
+            background: #00ff88;
+            color: #0f1923;
+        }
+
+        .btn-sim:hover {
+            background: #00cc6a;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #00ff88;
+        }
+
+        .btn-nao {
+            background: #ff4655;
+            color: white;
+        }
+
+        .btn-nao:hover {
+            background: #cc3844;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ff4655;
+        }
+
+        .btn-nunca {
+            background: #5a5a5a;
+            color: white;
+        }
+
+        .btn-nunca:hover {
+            background: #3a3a3a;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #5a5a5a;
+        }
+
+        .resposta {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 70, 85, 0.2);
+            border-radius: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .emoji {
+            font-size: 2em;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #ff4655;
+            border-radius: 50%;
+            animation: float 10s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .setup-notice {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 255, 136, 0.2);
+            border-radius: 10px;
+            font-size: 0.9em;
+            border: 1px solid #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="valorant-logo">🎮⚔️</div>
+        <h1>Ei, Mariane!</h1>
+        <p>
+            Bora jogar uma ranked duo no Valorant? 🔥<br>
+            Prometo não tiltar!(Já você não tenho tanta certeza)
+        </p>
+
+        <div class="buttons">
+            <button class="btn-sim" onclick="responderSim()">
+                ✅ SIM, BORA!
+            </button>
+            <button class="btn-nao" onclick="responderNao()">
+                ❌ NÃO
+            </button>
+            <button class="btn-nunca" onclick="responderNunca()">
+                💀 NUNCA JOGARIA COM UM TROUXA COMO VOCÊ
+            </button>
+        </div>
+
+        <div class="resposta" id="resposta"></div>
+
+        <div class="setup-notice">
+            ✅ <strong>E-mail configurado!</strong> Você receberá notificação quando ela aceitar jogar! 📧
+        </div>
+    </div>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script>
+        // CONFIGURAÇÃO DO EMAILJS (JÁ CONFIGURADO!)
+        const EMAILJS_CONFIG = {
+            publicKey: 'IRNvAocOCNm70Cnuw',  // Seu Public Key do EmailJS
+            serviceId: 'service_nf4tpis',   // ID do serviço de e-mail
+            templateId: 'template_emnjf42', // ID do template
+            toEmail: 'biel16m@gmail.com'     // Seu e-mail para receber notificações
+        };
+
+        // Inicializar EmailJS
+        (function(){
+            emailjs.init(EMAILJS_CONFIG.publicKey);
+        })();
+
+        // Criar partículas de fundo
+        function criarParticulas() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        criarParticulas();
+
+        function enviarEmail() {
+            // Parâmetros SIMPLIFICADOS do template (apenas 2 variáveis)
+            const templateParams = {
+                from_name: 'Mariana',
+                message: 'A Mariana aceitou jogar Valorant duo com você! 🎮🔥'
+            };
+
+            // Enviar e-mail
+            emailjs.send(
+                EMAILJS_CONFIG.serviceId,
+                EMAILJS_CONFIG.templateId,
+                templateParams
+            ).then(
+                function(response) {
+                    console.log('✅ E-mail enviado com sucesso!', response.status, response.text);
+                    console.log('📧 E-mail enviado para:', EMAILJS_CONFIG.toEmail);
+                },
+                function(error) {
+                    console.log('❌ Falha ao enviar e-mail:', error);
+                    console.log('💡 Verifique se o template tem as variáveis: {{from_name}} e {{message}}');
+                }
+            );
+        }
+
+        function mostrarResposta(texto, emoji) {
+            const respostaDiv = document.getElementById('resposta');
+            respostaDiv.innerHTML = `<span class="emoji">${emoji}</span><br>${texto}`;
+            respostaDiv.style.display = 'block';
+        }
+
+        function responderSim() {
+            mostrarResposta(
+                'BOOORA! Gosto muito de jogar com você',
+                '🎉'
+            );
+            enviarEmail(); // Envia notificação por e-mail
+            criarConfete();
+        }
+
+        function responderNao() {
+            // Mesma resposta do SIM (para ser engraçado)
+            mostrarResposta(
+                'Essa não é a resposta certa, vou entrar mesmo assim',
+                '😏'
+            );
+            enviarEmail(); // Envia notificação por e-mail
+            criarConfete();
+        }
+
+        function responderNunca() {
+            mostrarResposta(
+                'Você é mo otaria, sua otaria',
+                '🖕'
+            );
+        }
+
+        // Efeito de confete
+        function criarConfete() {
+            for (let i = 0; i < 50; i++) {
+                const confete = document.createElement('div');
+                confete.style.position = 'fixed';
+                confete.style.left = Math.random() * 100 + '%';
+                confete.style.top = '-10px';
+                confete.style.width = '10px';
+                confete.style.height = '10px';
+                confete.style.backgroundColor = ['#ff4655', '#00ff88', '#4a90e2'][Math.floor(Math.random() * 3)];
+                confete.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+                confete.style.animation = 'float 3s ease-out forwards';
+                document.body.appendChild(confete);
+                
+                setTimeout(() => confete.remove(), 3000);
+            }
+        }
+    </script>
+</body>
+</html>
